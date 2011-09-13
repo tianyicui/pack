@@ -1,0 +1,36 @@
+#title P06: 分组的背包问题
+
+* 问题
+
+有N件物品和一个容量为V的背包。第i件物品的费用是c[i]，价值是w[i]。这些物品被划分为若干组，每组中的物品互相冲突，最多选一件。求解将哪些物品装入背包可使这些物品的费用总和不超过背包容量，且价值总和最大。
+
+* 算法
+
+这个问题变成了每组物品有若干种策略：是选择本组的某一件，还是一件都不选。也就是说设f[k][v]表示前k组物品花费费用v能取得的最大权值，则有：
+
+    <code>f[k][v]=max{f[k-1][v],f[k-1][v-c[i]]+w[i]|物品i属于组k}</code>
+
+使用一维数组的伪代码如下：
+
+<src>
+for 所有的组k
+    for v=V..0
+        for 所有的i属于组k
+            f[v]=max{f[v],f[v-c[i]]+w[i]}
+</src>
+
+注意这里的三层循环的顺序，甚至在本文的第一个beta版中我自己都写错了。“for v=V..0”这一层循环必须在“for 所有的i属于组k”之外。这样才能保证每一组内的物品最多只有一个会被添加到背包中。
+
+另外，显然可以对每组内的物品应用[[P02]]中“一个简单有效的优化”。
+
+* 小结
+
+分组的背包问题将彼此互斥的若干物品称为一个组，这建立了一个很好的模型。不少背包问题的变形都可以转化为分组的背包问题（例如[[P07]]），由分组的背包问题进一步可定义“泛化物品”的概念，十分有利于解题。
+
+[[Index][首页]]
+
+--------
+
+Copyright (c)  2007  Tianyi Cui
+
+Permission is granted to copy, distribute and/or modify this document under the terms of the [[http://www.gnu.org/licenses/fdl.txt][GNU Free Documentation License]], Version 1.2 or any later version published by the Free Software Foundation.

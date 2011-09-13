@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="utf-8-unix"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <title>背包问题九讲</title>
+    <meta name="generator" content="muse.el" />
+    <meta http-equiv="Content-Type"
+          content="text/html; charset=utf-8" />
+    <style type="text/css">
+body {
+  background: white; color: black;
+  margin-left: 3%; margin-right: 7%;
+}
+
+p { margin-top: 1% }
+p.verse { margin-left: 3% }
+
+.example { margin-left: 3% }
+
+h2 {
+  margin-top: 25px;
+  margin-bottom: 0px;
+}
+h3 { margin-bottom: 0px; }
+    </style>
+  </head>
+  <body>
+    <h1>背包问题九讲</h1>
+    <!-- Page published by Emacs Muse begins here -->
+<blockquote>
+<p class="quoted">version 1.1 build 20071115</p>
+</blockquote>
+
+<div class="contents">
+<dl>
+<dt>
+<a href="#sec1">前言</a>
+</dt>
+<dt>
+<a href="#sec2">目录</a>
+</dt>
+<dd>
+<dl>
+<dt>
+<a href="#sec3">第一讲 01背包问题</a>
+</dt>
+<dt>
+<a href="#sec4">第二讲 完全背包问题</a>
+</dt>
+<dt>
+<a href="#sec5">第三讲 多重背包问题</a>
+</dt>
+<dt>
+<a href="#sec6">第四讲 混合三种背包问题</a>
+</dt>
+<dt>
+<a href="#sec7">第五讲 二维费用的背包问题</a>
+</dt>
+<dt>
+<a href="#sec8">第六讲 分组的背包问题</a>
+</dt>
+<dt>
+<a href="#sec9">第七讲 有依赖的背包问题</a>
+</dt>
+<dt>
+<a href="#sec10">第八讲 泛化物品</a>
+</dt>
+<dt>
+<a href="#sec11">第九讲 背包问题问法的变化</a>
+</dt>
+<dt>
+<a href="#sec12">附录一：USACO中的背包问题</a>
+</dt>
+<dt>
+<a href="#sec13">附录二：背包问题的搜索解法</a>
+</dt>
+</dl>
+</dd>
+<dt>
+<a href="#sec14">联系方式</a>
+</dt>
+<dt>
+<a href="#sec15">致谢</a>
+</dt>
+</dl>
+</div>
+
+
+<h2><a name="sec1" id="sec1"></a>
+前言</h2>
+
+<p class="first">本篇文章是我(dd_engi)正在进行中的一个雄心勃勃的写作计划的一部分，这个计划的内容是写作一份较为完善的NOIP难度的动态规划总结，名为《解动态规划题的基本思考方式》。现在你看到的是这个写作计划最先发布的一部分。</p>
+
+<p>背包问题是一个经典的动态规划模型。它既简单形象容易理解，又在某种程度上能够揭示动态规划的本质，故不少教材都把它作为动态规划部分的第一道例题，我也将它放在我的写作计划的第一部分。</p>
+
+<p>读本文最重要的是思考。因为我的语言和写作方式向来不以易于理解为长，思路也偶有跳跃的地方，后面更有需要大量思考才能理解的比较抽象的内容。更重要的是：不大量思考，绝对不可能学好动态规划这一信息学奥赛中最精致的部分。</p>
+
+<p>你现在看到的是本文的v1.1版，发布于2007年11月15日。我会长期维护这份文本，把大家的意见和建议融入其中，也会不断加入我在OI学习以及将来可能的ACM-ICPC的征程中得到的新的心得。但目前本文还没有一个固定的发布页面，想了解本文是否有更新版本发布，可以在<a href="http://oibh.org/bbs/">OIBH论坛</a>中以“背包问题九讲”为关键字搜索贴子，每次比较重大的版本更新都会在这个论坛里发贴公布。也可以用“背包问题九讲”为关键字在搜索引擎中搜索以得到最新版本。</p>
+
+
+<h2><a name="sec2" id="sec2"></a>
+目录</h2>
+
+<h3><a name="sec3" id="sec3"></a>
+<a href="P01.html">第一讲 01背包问题</a></h3>
+
+<p class="first">这是最基本的背包问题，每个物品最多只能放一次。</p>
+
+
+<h3><a name="sec4" id="sec4"></a>
+<a href="P02.html">第二讲 完全背包问题</a></h3>
+
+<p class="first">第二个基本的背包问题模型，每种物品可以放无限多次。</p>
+
+
+<h3><a name="sec5" id="sec5"></a>
+<a href="P03.html">第三讲 多重背包问题</a></h3>
+
+<p class="first">每种物品有一个固定的次数上限。</p>
+
+
+<h3><a name="sec6" id="sec6"></a>
+<a href="P04.html">第四讲 混合三种背包问题</a></h3>
+
+<p class="first">将前面三种简单的问题叠加成较复杂的问题。</p>
+
+
+<h3><a name="sec7" id="sec7"></a>
+<a href="P05.html">第五讲 二维费用的背包问题</a></h3>
+
+<p class="first">一个简单的常见扩展。</p>
+
+
+<h3><a name="sec8" id="sec8"></a>
+<a href="P06.html">第六讲 分组的背包问题</a></h3>
+
+<p class="first">一种题目类型，也是一个有用的模型。后两节的基础。</p>
+
+
+<h3><a name="sec9" id="sec9"></a>
+<a href="P07.html">第七讲 有依赖的背包问题</a></h3>
+
+<p class="first">另一种给物品的选取加上限制的方法。</p>
+
+
+<h3><a name="sec10" id="sec10"></a>
+<a href="P08.html">第八讲 泛化物品</a></h3>
+
+<p class="first">我自己关于背包问题的思考成果，有一点抽象。</p>
+
+
+<h3><a name="sec11" id="sec11"></a>
+<a href="P09.html">第九讲 背包问题问法的变化</a></h3>
+
+<p class="first">试图触类旁通、举一反三。</p>
+
+
+<h3><a name="sec12" id="sec12"></a>
+<a href="P10.html">附录一：USACO中的背包问题</a></h3>
+
+<p class="first">给出 USACO Training 上可供练习的背包问题列表，及简单的解答。</p>
+
+
+<h3><a name="sec13" id="sec13"></a>
+<a href="P11.html">附录二：背包问题的搜索解法</a></h3>
+
+<p class="first">除动态规划外另一种背包问题的解法。</p>
+
+
+
+<h2><a name="sec14" id="sec14"></a>
+联系方式</h2>
+
+<p class="first">如果有任何意见和建议，特别是文章的错误和不足，或者希望为文章添加新的材料，可以通过<a href="http://kontactr.com/user/tianyi/">http://kontactr.com/user/tianyi/</a>这个网页联系我。</p>
+
+<p>值得说明的是，如果有OI方面的问题，例如不明白自己的程序为什么错了或者索要某种算法的源代码，使用这个联系方式可能得不到及时解答。请在<a href="http://oibh.org/bbs/">OIBH论坛</a>发问。</p>
+
+
+<h2><a name="sec15" id="sec15"></a>
+致谢</h2>
+
+<p class="first">感谢以下名单：</p>
+
+<ul>
+<li>阿坦</li>
+<li>jason911</li>
+<li>donglixp</li>
+<li>LeafDuo</li>
+</ul>
+
+<p>他们每人都最先指出了本文曾经存在的某个并非无关紧要的错误。谢谢你们如此仔细地阅读拙作并弥补我的疏漏。</p>
+
+<p>感谢 XiaQ，它针对本文的第一个beta版发表了用词严厉的六条建议，虽然我只认同并采纳了其中的两条。在所有读者几乎一边倒的赞扬将我包围的当时，你的贴子是我的一剂清醒剂，让我能清醒起来并用更严厉的眼光审视自己的作品。</p>
+
+<p>sfita 提供了<a href="P01.html">P01</a>中的“一个常数优化”。</p>
+
+<p>当然，还有用各种方式对我表示鼓励和支持的几乎无法计数的同学。不管是当面赞扬，或是在论坛上回复我的贴子，不管是发来热情洋溢的邮件，或是在即时聊天的窗口里竖起大拇指，你们的鼓励和支持是支撑我的写作计划的强大动力，也鞭策着我不断提高自身水平，谢谢你们！</p>
+
+<p>最后，感谢 <a href="http://www.gnu.org/software/emacs/">Emacs</a> 这一世界最强大的编辑器的所有贡献者，感谢它的插件 <a href="http://mwolson.org/projects/EmacsMuse.html">EmacsMuse</a> 的开发者们，本文的所有编辑工作都借助这两个卓越的自由软件完成。谢谢你们——自由软件社群——为社会提供了如此有生产力的工具。我深深钦佩你们身上体现出的自由软件的精神，没有你们的感召，我不能完成本文。在你们的影响下，采用自由文档的方式发布本文档，也是我对自由社会事业的微薄努力。</p>
+
+
+<p><a href="Index.html">首页</a></p>
+
+<hr />
+
+<p>Copyright (c)  2007  Tianyi Cui</p>
+
+<p>Permission is granted to copy, distribute and/or modify this document under the terms of the <a href="http://www.gnu.org/licenses/fdl.txt">GNU Free Documentation License</a>, Version 1.2 or any later version published by the Free Software Foundation.</p>
+
+
+
+<!-- Page published by Emacs Muse ends here -->
+  </body>
+</html>

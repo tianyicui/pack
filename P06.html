@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8-unix"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <title>P06: 分组的背包问题</title>
+    <meta name="generator" content="muse.el" />
+    <meta http-equiv="Content-Type"
+          content="text/html; charset=utf-8" />
+    <style type="text/css">
+body {
+  background: white; color: black;
+  margin-left: 3%; margin-right: 7%;
+}
+
+p { margin-top: 1% }
+p.verse { margin-left: 3% }
+
+.example { margin-left: 3% }
+
+h2 {
+  margin-top: 25px;
+  margin-bottom: 0px;
+}
+h3 { margin-bottom: 0px; }
+    </style>
+  </head>
+  <body>
+    <h1>P06: 分组的背包问题</h1>
+    <!-- Page published by Emacs Muse begins here -->
+<h2>问题</h2>
+
+<p class="first">有N件物品和一个容量为V的背包。第i件物品的费用是c[i]，价值是w[i]。这些物品被划分为若干组，每组中的物品互相冲突，最多选一件。求解将哪些物品装入背包可使这些物品的费用总和不超过背包容量，且价值总和最大。</p>
+
+
+<h2>算法</h2>
+
+<p class="first">这个问题变成了每组物品有若干种策略：是选择本组的某一件，还是一件都不选。也就是说设f[k][v]表示前k组物品花费费用v能取得的最大权值，则有：</p>
+
+<blockquote>
+<p class="quoted"><code>f[k][v]=max{f[k-1][v],f[k-1][v-c[i]]+w[i]|物品i属于组k}</code></p>
+</blockquote>
+
+<p>使用一维数组的伪代码如下：</p>
+
+<pre class="example">
+for 所有的组k
+    for v=V..0
+        for 所有的i属于组k
+            f[v]=max{f[v],f[v-c[i]]+w[i]}
+</pre>
+
+<p>注意这里的三层循环的顺序，甚至在本文的第一个beta版中我自己都写错了。“for v=V..0”这一层循环必须在“for 所有的i属于组k”之外。这样才能保证每一组内的物品最多只有一个会被添加到背包中。</p>
+
+<p>另外，显然可以对每组内的物品应用<a href="P02.html">P02</a>中“一个简单有效的优化”。</p>
+
+
+<h2>小结</h2>
+
+<p class="first">分组的背包问题将彼此互斥的若干物品称为一个组，这建立了一个很好的模型。不少背包问题的变形都可以转化为分组的背包问题（例如<a href="P07.html">P07</a>），由分组的背包问题进一步可定义“泛化物品”的概念，十分有利于解题。</p>
+
+<p><a href="Index.html">首页</a></p>
+
+<hr />
+
+<p>Copyright (c)  2007  Tianyi Cui</p>
+
+<p>Permission is granted to copy, distribute and/or modify this document under the terms of the <a href="http://www.gnu.org/licenses/fdl.txt">GNU Free Documentation License</a>, Version 1.2 or any later version published by the Free Software Foundation.</p>
+
+
+
+<!-- Page published by Emacs Muse ends here -->
+  </body>
+</html>

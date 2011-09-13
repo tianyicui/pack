@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8-unix"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <title>P04: 混合三种背包问题</title>
+    <meta name="generator" content="muse.el" />
+    <meta http-equiv="Content-Type"
+          content="text/html; charset=utf-8" />
+    <style type="text/css">
+body {
+  background: white; color: black;
+  margin-left: 3%; margin-right: 7%;
+}
+
+p { margin-top: 1% }
+p.verse { margin-left: 3% }
+
+.example { margin-left: 3% }
+
+h2 {
+  margin-top: 25px;
+  margin-bottom: 0px;
+}
+h3 { margin-bottom: 0px; }
+    </style>
+  </head>
+  <body>
+    <h1>P04: 混合三种背包问题</h1>
+    <!-- Page published by Emacs Muse begins here -->
+<h2>问题</h2>
+
+<p class="first">如果将<a href="P01.html">P01</a>、<a href="P02.html">P02</a>、<a href="P03.html">P03</a>混合起来。也就是说，有的物品只可以取一次（01背包），有的物品可以取无限次（完全背包），有的物品可以取的次数有一个上限（多重背包）。应该怎么求解呢？</p>
+
+
+<h2>01背包与完全背包的混合</h2>
+
+<p class="first">考虑到在<a href="P01.html">P01</a>和<a href="P02.html">P02</a>中给出的伪代码只有一处不同，故如果只有两类物品：一类物品只能取一次，另一类物品可以取无限次，那么只需在对每个物品应用转移方程时，根据物品的类别选用顺序或逆序的循环即可，复杂度是O(VN)。伪代码如下：</p>
+
+<pre class="example">
+for i=1..N
+    if 第i件物品属于01背包
+        for v=V..0
+            f[v]=max{f[v],f[v-c[i]]+w[i]};
+    else if 第i件物品属于完全背包
+        for v=0..V
+            f[v]=max{f[v],f[v-c[i]]+w[i]};
+</pre>
+
+
+<h2>再加上多重背包</h2>
+
+<p class="first">如果再加上有的物品最多可以取有限次，那么原则上也可以给出O(VN)的解法：遇到多重背包类型的物品用单调队列解即可。但如果不考虑超过NOIP范围的算法的话，用<a href="P03.html">P03</a>中将每个这类物品分成O(log n[i])个01背包的物品的方法也已经很优了。</p>
+
+<p>当然，更清晰的写法是调用我们前面给出的三个相关过程。</p>
+
+<pre class="example">
+for i=1..N
+    if 第i件物品属于01背包
+        ZeroOnePack(c[i],w[i])
+    else if 第i件物品属于完全背包
+        CompletePack(c[i],w[i])
+    else if 第i件物品属于多重背包
+        MultiplePack(c[i],w[i],n[i])
+</pre>
+
+<p>在最初写出这三个过程的时候，可能完全没有想到它们会在这里混合应用。我想这体现了编程中抽象的威力。如果你一直就是以这种“抽象出过程”的方式写每一类背包问题的，也非常清楚它们的实现中细微的不同，那么在遇到混合三种背包问题的题目时，一定能很快想到上面简洁的解法，对吗？</p>
+
+
+<h2>小结</h2>
+
+<p class="first">有人说，困难的题目都是由简单的题目叠加而来的。这句话是否公理暂且存之不论，但它在本讲中已经得到了充分的体现。本来01背包、完全背包、多重背包都不是什么难题，但将它们简单地组合起来以后就得到了这样一道一定能吓倒不少人的题目。但只要基础扎实，领会三种基本背包问题的思想，就可以做到把困难的题目拆分成简单的题目来解决。</p>
+
+<p><a href="Index.html">首页</a></p>
+
+<hr />
+
+<p>Copyright (c)  2007  Tianyi Cui</p>
+
+<p>Permission is granted to copy, distribute and/or modify this document under the terms of the <a href="http://www.gnu.org/licenses/fdl.txt">GNU Free Documentation License</a>, Version 1.2 or any later version published by the Free Software Foundation.</p>
+
+
+
+<!-- Page published by Emacs Muse ends here -->
+  </body>
+</html>
