@@ -34,7 +34,18 @@
 \index_command default
 \paperfontsize default
 \spacing single
-\use_hyperref false
+\use_hyperref true
+\pdf_title "背包问题九讲"
+\pdf_author "崔添翼"
+\pdf_bookmarks true
+\pdf_bookmarksnumbered true
+\pdf_bookmarksopen true
+\pdf_bookmarksopenlevel 2
+\pdf_breaklinks true
+\pdf_pdfborder true
+\pdf_colorlinks false
+\pdf_backref false
+\pdf_pdfusetitle true
 \papersize a4paper
 \use_geometry false
 \use_amsmath 1
@@ -69,7 +80,25 @@
 \begin_body
 
 \begin_layout Title
-P01: 01背包问题
+背包问题九讲 v2.0
+\end_layout
+
+\begin_layout Author
+崔添翼 (Tianyi Cui, a.k.a.
+ dd_engi)
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset toc
+LatexCommand tableofcontents
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Part
+01背包问题
 \end_layout
 
 \begin_layout Section
