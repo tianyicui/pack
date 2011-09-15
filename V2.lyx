@@ -98,6 +98,12 @@ LatexCommand tableofcontents
 \end_layout
 
 \begin_layout Section
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:01背包问题"
+
+\end_inset
+
 01背包问题
 \end_layout
 
@@ -690,6 +696,12 @@ for
 \end_layout
 
 \begin_layout Section
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:完全背包问题"
+
+\end_inset
+
 完全背包问题
 \end_layout
 
@@ -797,6 +809,12 @@ F[i,v]=\mathrm{max}\{F[i-1,v-kC_{i}]+kW_{i}\:|\:0\leq kC_{i}\leq v\}
 \end_layout
 
 \begin_layout Subsection
+\begin_inset CommandInset label
+LatexCommand label
+name "sub:一个简单有效的优化"
+
+\end_inset
+
 一个简单有效的优化 
 \end_layout
 
@@ -1120,7 +1138,7 @@ def
 \end_layout
 
 \begin_layout Subsection
-总结
+小结
 \end_layout
 
 \begin_layout Standard
@@ -1133,6 +1151,12 @@ def
 \end_layout
 
 \begin_layout Section
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:多重背包问题"
+
+\end_inset
+
 多重背包问题
 \end_layout
 
@@ -1543,8 +1567,29 @@ def
 \end_layout
 
 \begin_layout Standard
-如果将前面的三种背包问题混合起来。也就是说，有的物品只可以取一次（01背包），有的物品可以取无限次（完全背包），有的物品可以取的次数有一个上限（多重背包）。应该
-怎么求解呢？
+如果将前面
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:01背包问题"
+
+\end_inset
+
+、
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:完全背包问题"
+
+\end_inset
+
+、
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:多重背包问题"
+
+\end_inset
+
+中的三种背包问题混合起来。也就是说，有的物品只可以取一次（01背包），有的物品可以取无限次（完全背包），有的物品可以取的次数有一个上限（多重背包）。应该怎么求解
+呢？
 \end_layout
 
 \begin_layout Subsection
@@ -1923,8 +1968,348 @@ F[i,v,u]=\mathrm{max\{F[i-1,v,u],F[i-1,v-C_{i},u-D_{i}]+W_{i}\}}
 当发现由熟悉的动态规划题目变形得来的题目时，在原来的状态中加一维以满足新的限制是一种比较通用的方法。希望你能从本讲中初步体会到这种方法。
 \end_layout
 
-\begin_layout Standard
+\begin_layout Section
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:分组的背包问题"
 
+\end_inset
+
+分组的背包问题
+\end_layout
+
+\begin_layout Subsection
+问题
+\end_layout
+
+\begin_layout Standard
+有
+\begin_inset Formula $N$
+\end_inset
+
+件物品和一个容量为
+\begin_inset Formula $V$
+\end_inset
+
+的背包。第
+\begin_inset Formula $i$
+\end_inset
+
+件物品的费用是
+\begin_inset Formula $C_{i}$
+\end_inset
+
+，价值是
+\begin_inset Formula $W_{i}$
+\end_inset
+
+。这些物品被划分为
+\begin_inset Formula $K$
+\end_inset
+
+组，每组中的物品互相冲突，最多选一件。求解将哪些物品装入背包可使这些物品的费用总和不超过背包容量，且价值总和最大。
+\end_layout
+
+\begin_layout Subsection
+算法
+\end_layout
+
+\begin_layout Standard
+这个问题变成了每组物品有若干种策略：是选择本组的某一件，还是一件都不选。也就是说设
+\begin_inset Formula $F[k,v]$
+\end_inset
+
+表示前
+\begin_inset Formula $k$
+\end_inset
+
+组物品花费费用
+\begin_inset Formula $v$
+\end_inset
+
+能取得的最大权值，则有：
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+F[k,v]=\mathrm{max}\{F[k-1,v],F[k-1,v-C_{i}]+W_{i}\:|\:\mathrm{item}\: i\in\mathrm{group}\: k\}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+使用一维数组的伪代码如下：
+\end_layout
+
+\begin_layout LyX-Code
+for 
+\begin_inset Formula $k=1$
+\end_inset
+
+ to 
+\begin_inset Formula $K$
+\end_inset
+
+
+\end_layout
+
+\begin_layout LyX-Code
+    for 
+\begin_inset Formula $v=V$
+\end_inset
+
+ to 
+\begin_inset Formula $0$
+\end_inset
+
+
+\end_layout
+
+\begin_layout LyX-Code
+        for item 
+\begin_inset Formula $i$
+\end_inset
+
+ in group 
+\begin_inset Formula $k$
+\end_inset
+
+
+\end_layout
+
+\begin_layout LyX-Code
+            
+\begin_inset Formula $F[v]=\mathrm{max}\{F[v],F[v-C_{i}]+W_{i}\}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+这里三层循环的顺序保证了每一组内的物品最多只有一个会被添加到背包中。
+\end_layout
+
+\begin_layout Standard
+另外，显然可以对每组内的物品应用
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sub:一个简单有效的优化"
+
+\end_inset
+
+中的优化。
+\end_layout
+
+\begin_layout Subsection
+小结 
+\end_layout
+
+\begin_layout Standard
+分组的背包问题将彼此互斥的若干物品称为一个组，这建立了一个很好的模型。不少背包问题的变形都可以转化为分组的背包问题（例如
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:有依赖的背包问题"
+
+\end_inset
+
+），由分组的背包问题进一步可定义“泛化物品”的概念，十分有利于解题。
+\end_layout
+
+\begin_layout Section
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:有依赖的背包问题"
+
+\end_inset
+
+有依赖的背包问题
+\end_layout
+
+\begin_layout Subsection
+简化的问题 
+\end_layout
+
+\begin_layout Standard
+这种背包问题的物品间存在某种“依赖”的关系。也就是说，物品
+\begin_inset Formula $i$
+\end_inset
+
+依赖于物品
+\begin_inset Formula $j$
+\end_inset
+
+，表示若选物品
+\begin_inset Formula $i$
+\end_inset
+
+，则必须选物品
+\begin_inset Formula $j$
+\end_inset
+
+。为了简化起见，我们先设没有某个物品既依赖于别的物品，又被别的物品所依赖；另外，没有某件物品同时依赖多件物品。
+\end_layout
+
+\begin_layout Subsection
+算法 
+\end_layout
+
+\begin_layout Standard
+这个问题由NOIP2006题目中金明的预算方案一题扩展而来。遵从该题的提法，将不依赖于别的物品的物品称为“主件”，依赖于某主件的物品称为“附件”。由这个问题的简
+化条件可知所有的物品由若干主件和依赖于每个主件的一个附件集合组成。
+\end_layout
+
+\begin_layout Standard
+按照背包问题的一般思路，仅考虑一个主件和它的附件集合。可是，可用的策略非常多，包括：一个也不选，仅选择主件，选择主件后再选择一个附件，选择主件后再选择两个附件…
+…无法用状态转移方程来表示如此多的策略。事实上，设有
+\begin_inset Formula $n$
+\end_inset
+
+个附件，则策略有
+\begin_inset Formula $2^{n}+1$
+\end_inset
+
+个，为指数级。
+\end_layout
+
+\begin_layout Standard
+考虑到所有这些策略都是互斥的（也就是说，你只能选择一种策略），所以一个主件和它的附件集合实际上对应于
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:分组的背包问题"
+
+\end_inset
+
+中的一个物品组，每个选择了主件又选择了若干个附件的策略对应于这个物品组中的一个物品，其费用和价值都是这个策略中的物品的值的和。但仅仅是这一步转化并不能给出一个好
+的算法，因为物品组中的物品还是像原问题的策略一样多。
+\end_layout
+
+\begin_layout Standard
+再考虑对每组内的物品应用
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sub:一个简单有效的优化"
+
+\end_inset
+
+中的优化。我们可以想到，对于第
+\begin_inset Formula $k$
+\end_inset
+
+个物品组中的物品，所有费用相同的物品只留一个价值最大的，不影响结果。所以，可以对主件
+\begin_inset Formula $k$
+\end_inset
+
+的“附件集合”先进行一次01背包，得到费用依次为
+\begin_inset Formula $0\text{\ldots}V-C_{k}$
+\end_inset
+
+所有这些值时相应的最大价值
+\begin_inset Formula $F_{k}[0\ldots V-C_{k}]$
+\end_inset
+
+。那么，这个主件及它的附件集合相当于
+\begin_inset Formula $V-C_{k}+1$
+\end_inset
+
+个物品的物品组，其中费用为
+\begin_inset Formula $v$
+\end_inset
+
+的物品的价值为
+\begin_inset Formula $F_{k}[v-C_{k}]+W_{k}$
+\end_inset
+
+，
+\begin_inset Formula $v$
+\end_inset
+
+的取值范围是
+\begin_inset Formula $C_{k}\leq v\leq V$
+\end_inset
+
+。
+\end_layout
+
+\begin_layout Standard
+也就是说，原来指数级的策略中，有很多策略都是冗余的，通过一次01背包后，将主件
+\begin_inset Formula $k$
+\end_inset
+
+及其附件转化为
+\begin_inset Formula $V-C_{k}+1$
+\end_inset
+
+个物品的物品组，就可以直接应用
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:分组的背包问题"
+
+\end_inset
+
+的算法解决问题了。
+\end_layout
+
+\begin_layout Subsection
+较一般的问题
+\end_layout
+
+\begin_layout Standard
+更一般的问题是：依赖关系以图论中“森林”
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+即多叉树的集合
+\end_layout
+
+\end_inset
+
+的形式给出。也就是说，主件的附件仍然可以具有自己的附件集合。限制只是每个物品最多只依赖于一个物品（只有一个主件）且不出现循环依赖。
+\end_layout
+
+\begin_layout Standard
+解决这个问题仍然可以用将每个主件及其附件集合转化为物品组的方式。唯一不同的是，由于附件可能还有附件，就不能将每个附件都看作一个一般的01背包中的物品了。若这个附
+件也有附件集合，则它必定要被先转化为物品组，然后用分组的背包问题解出主件及其附件集合所对应的附件组中各个费用的附件所对应的价值。
+\end_layout
+
+\begin_layout Standard
+事实上，这是一种树形动态规划，其特点是，在用动态规划求每个父节点的属性之前，需要对它的各个儿子的属性进行一次动态规划式的求值。这已经触及到了“泛化物品”的思想。
+看完
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:泛化物品"
+
+\end_inset
+
+后，你会发现这个“依赖关系树”每一个子树都等价于一件泛化物品，求某节点为根的子树对应的泛化物品相当于求其所有儿子的对应的泛化物品之和。
+\end_layout
+
+\begin_layout Subsection
+小结
+\end_layout
+
+\begin_layout Standard
+NOIP2006的那道背包问题我做得很失败，写了上百行的代码，却一分未得。后来我通过思考发现通过引入“物品组”和“依赖”的概念可以加深对这题的理解，还可以解决它
+的推广问题。用物品组的思想考虑那题中极其特殊的依赖关系：物品不能既作主件又作附件，每个主件最多有两个附件，可以发现一个主件和它的两个附件等价于一个由四个物品组成
+的物品组，这便揭示了问题的某种本质。
+\end_layout
+
+\begin_layout Standard
+后来，我在《背包问题九讲》第一版中总结此事时说：“失败不是什么丢人的事情，从失败中全无收获才是。”NOIP2007我得了满分。
+\end_layout
+
+\begin_layout Section
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:泛化物品"
+
+\end_inset
+
+泛化物品
 \end_layout
 
 \end_body
