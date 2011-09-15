@@ -1534,5 +1534,253 @@ def
 希望你特别注意“拆分物品”的思想和方法，自己证明一下它的正确性，并将完整的程序代码写出来。
 \end_layout
 
+\begin_layout Section
+混合三种背包问题
+\end_layout
+
+\begin_layout Subsection
+问题
+\end_layout
+
+\begin_layout Standard
+如果将前面的三种背包问题混合起来。也就是说，有的物品只可以取一次（01背包），有的物品可以取无限次（完全背包），有的物品可以取的次数有一个上限（多重背包）。应该
+怎么求解呢？
+\end_layout
+
+\begin_layout Subsection
+01背包与完全背包的混合
+\end_layout
+
+\begin_layout Standard
+考虑到01背包和完全背包中给出的伪代码只有一处不同，故如果只有两类物品：一类物品只能取一次，另一类物品可以取无限次，那么只需在对每个物品应用转移方程时，根据物品
+的类别选用顺序或逆序的循环即可，复杂度是
+\begin_inset Formula $O(VN)$
+\end_inset
+
+。伪代码如下：
+\end_layout
+
+\begin_layout LyX-Code
+for 
+\begin_inset Formula $i=1$
+\end_inset
+
+ to 
+\begin_inset Formula $N$
+\end_inset
+
+
+\end_layout
+
+\begin_layout LyX-Code
+    if 第
+\begin_inset Formula $i$
+\end_inset
+
+件物品属于01背包
+\end_layout
+
+\begin_layout LyX-Code
+        for 
+\begin_inset Formula $v=V$
+\end_inset
+
+ to 
+\begin_inset Formula $C_{i}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout LyX-Code
+            
+\begin_inset Formula $F[v]$
+\end_inset
+
+ = 
+\begin_inset Formula $\mathrm{max}(F[v],F[v-C_{i}]+W_{i})$
+\end_inset
+
+
+\end_layout
+
+\begin_layout LyX-Code
+    else if 第
+\begin_inset Formula $i$
+\end_inset
+
+件物品属于完全背包
+\end_layout
+
+\begin_layout LyX-Code
+        for 
+\begin_inset Formula $v=C_{i}$
+\end_inset
+
+ to 
+\begin_inset Formula $V$
+\end_inset
+
+
+\end_layout
+
+\begin_layout LyX-Code
+            
+\begin_inset Formula $F[v]$
+\end_inset
+
+ = 
+\begin_inset Formula $\mathrm{max}(F[v],F[v-C_{i}]+W_{i})$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+再加上多重背包 
+\end_layout
+
+\begin_layout Standard
+如果再加上最多可以取有限次的多重背包式的物品，那么利用单调队列，也可以给出均摊
+\begin_inset Formula $O(VN)$
+\end_inset
+
+的解法。
+\end_layout
+
+\begin_layout Standard
+但如果不考虑单调队列算法的话，用将每个这类物品分成
+\begin_inset Formula $\text{O(\mathrm{log}}M_{i})$
+\end_inset
+
+个01背包的物品的方法也已经很优了。
+\end_layout
+
+\begin_layout Standard
+当然，最清晰的写法是调用我们前面给出的三个过程。
+\end_layout
+
+\begin_layout LyX-Code
+for 
+\begin_inset Formula $i=1$
+\end_inset
+
+ to 
+\begin_inset Formula $N$
+\end_inset
+
+
+\end_layout
+
+\begin_layout LyX-Code
+    if 第
+\begin_inset Formula $i$
+\end_inset
+
+件物品属于01背包
+\end_layout
+
+\begin_layout LyX-Code
+        
+\begin_inset Formula $\mathsf{ZeroOnePack}$
+\end_inset
+
+(
+\begin_inset Formula $F$
+\end_inset
+
+,
+\begin_inset Formula $C_{i}$
+\end_inset
+
+,
+\begin_inset Formula $W_{i}$
+\end_inset
+
+)
+\end_layout
+
+\begin_layout LyX-Code
+    else if 第
+\begin_inset Formula $i$
+\end_inset
+
+件物品属于完全背包
+\end_layout
+
+\begin_layout LyX-Code
+        
+\begin_inset Formula $\mathsf{CompletePack}$
+\end_inset
+
+(
+\begin_inset Formula $F$
+\end_inset
+
+,
+\begin_inset Formula $C_{i}$
+\end_inset
+
+,
+\begin_inset Formula $W_{i}$
+\end_inset
+
+)
+\end_layout
+
+\begin_layout LyX-Code
+    else if 第
+\begin_inset Formula $i$
+\end_inset
+
+件物品属于多重背包
+\end_layout
+
+\begin_layout LyX-Code
+        
+\begin_inset Formula $\mathsf{MultiplePack}$
+\end_inset
+
+(
+\begin_inset Formula $F$
+\end_inset
+
+,
+\begin_inset Formula $C_{i}$
+\end_inset
+
+,
+\begin_inset Formula $W_{i}$
+\end_inset
+
+,
+\begin_inset Formula $N_{i}$
+\end_inset
+
+)
+\end_layout
+
+\begin_layout Standard
+在最初写出这三个过程的时候，可能完全没有想到它们会在这里混合应用。我想这体现了编程中抽象的威力。如果你一直就是以这种“抽象出过程”的方式写每一类背包问题的，也非
+常清楚它们的实现中细微的不同，那么在遇到混合三种背包问题的题目时，一定能很快想到上面简洁的解法，对吗？
+\end_layout
+
+\begin_layout Subsection
+小结
+\end_layout
+
+\begin_layout Standard
+有人说，困难的题目都是由简单的题目叠加而来的。这句话是否公理暂且存之不论，但它在本讲中已经得到了充分的体现。本来01背包、完全背包、多重背包都不是什么难题，但将
+它们简单地组合起来以后就得到了这样一道一定能吓倒不少人的题目。但只要基础扎实，领会三种基本背包问题的思想，就可以做到把困难的题目拆分成简单的题目来解决。
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout LyX-Code
+
+\end_layout
+
 \end_body
 \end_document
