@@ -492,7 +492,7 @@ def
 \end_inset
 
  = 
-\begin_inset Formula $\mathrm{max}\{F[v],f[v-C]+W\}$
+\begin_inset Formula $\mathrm{max}(F[v],f[v-C]+W)$
 \end_inset
 
 
@@ -670,7 +670,7 @@ for
 \end_inset
 
  to 
-\begin_inset Formula $\mathrm{max}\{V-\Sigma_{i}^{N}W_{i},C_{i}\}$
+\begin_inset Formula $\mathrm{max}(V-\Sigma_{i}^{N}W_{i},C_{i})$
 \end_inset
 
 
@@ -982,7 +982,7 @@ for
 \end_inset
 
  = 
-\begin_inset Formula $\mathrm{max}\{F[v],F[v-C_{i}]+W_{i}\}$
+\begin_inset Formula $\mathrm{max}(F[v],F[v-C_{i}]+W_{i})$
 \end_inset
 
 
@@ -1132,8 +1132,406 @@ def
 事实上，对每一道动态规划题目都思考其方程的意义以及如何得来，是加深对动态规划的理解、提高动态规划功力的好方法。
 \end_layout
 
-\begin_layout Standard
+\begin_layout Section
+多重背包问题
+\end_layout
 
+\begin_layout Subsection
+题目
+\end_layout
+
+\begin_layout Standard
+有
+\begin_inset Formula $N$
+\end_inset
+
+种物品和一个容量为
+\begin_inset Formula $V$
+\end_inset
+
+的背包。第
+\begin_inset Formula $i$
+\end_inset
+
+种物品最多有
+\begin_inset Formula $M_{i}$
+\end_inset
+
+件可用，每件耗费的空间是
+\begin_inset Formula $C_{i}$
+\end_inset
+
+，价值是
+\begin_inset Formula $W_{i}$
+\end_inset
+
+。求解将哪些物品装入背包可使这些物品的耗费的空间总和不超过背包容量，且价值总和最大。
+\end_layout
+
+\begin_layout Subsection
+基本算法
+\end_layout
+
+\begin_layout Standard
+这题目和完全背包问题很类似。基本的方程只需将完全背包问题的方程略微一改即可。
+\end_layout
+
+\begin_layout Standard
+因为对于第
+\begin_inset Formula $i$
+\end_inset
+
+种物品有
+\begin_inset Formula $M_{i}+1$
+\end_inset
+
+种策略：取
+\begin_inset Formula $0$
+\end_inset
+
+件，取
+\begin_inset Formula $1$
+\end_inset
+
+件……取
+\begin_inset Formula $M_{i}$
+\end_inset
+
+件。令
+\begin_inset Formula $F[i,v]$
+\end_inset
+
+表示前
+\begin_inset Formula $i$
+\end_inset
+
+种物品恰放入一个容量为
+\begin_inset Formula $v$
+\end_inset
+
+的背包的最大价值，则有状态转移方程：
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+F[i\text{，}v]=\mathrm{max}\{F[i-1,v-k*C_{i}]+k*W_{i}\:|\:0\leq k\leq M_{i}\}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+复杂度是
+\begin_inset Formula $O(V\Sigma M_{i})$
+\end_inset
+
+。
+\end_layout
+
+\begin_layout Subsection
+转化为01背包问题
+\end_layout
+
+\begin_layout Standard
+另一种好想好写的基本方法是转化为01背包求解：把第
+\begin_inset Formula $i$
+\end_inset
+
+种物品换成
+\begin_inset Formula $M_{i}$
+\end_inset
+
+件01背包中的物品，则得到了物品数为
+\begin_inset Formula $\Sigma M_{i}$
+\end_inset
+
+的01背包问题。直接求解之，复杂度仍然是
+\begin_inset Formula $O(V\Sigma M_{i})$
+\end_inset
+
+。
+\end_layout
+
+\begin_layout Standard
+但是我们期望将它转化为01背包问题之后，能够像完全背包一样降低复杂度。
+\end_layout
+
+\begin_layout Standard
+仍然考虑二进制的思想，我们考虑把第
+\begin_inset Formula $i$
+\end_inset
+
+种物品换成若干件物品，使得原问题中第
+\begin_inset Formula $i$
+\end_inset
+
+种物品可取的每种策略——取
+\begin_inset Formula $0\ldots M_{i}$
+\end_inset
+
+件——均能等价于取若干件代换以后的物品。另外，取超过
+\begin_inset Formula $M_{i}$
+\end_inset
+
+件的策略必不能出现。
+\end_layout
+
+\begin_layout Standard
+方法是：将第
+\begin_inset Formula $i$
+\end_inset
+
+种物品分成若干件01背包中的物品，其中每件物品有一个系数。这件物品的费用和价值均是原来的费用和价值乘以这个系数。令这些系数分别为
+\begin_inset Formula $1,2,2^{2}\ldots2^{k-1},M_{i}-2^{k}+1$
+\end_inset
+
+，且
+\begin_inset Formula $k$
+\end_inset
+
+是满足
+\begin_inset Formula $M_{i}-2^{k}+1>0$
+\end_inset
+
+的最大整数。例如，如果
+\begin_inset Formula $M_{i}$
+\end_inset
+
+为
+\begin_inset Formula $13$
+\end_inset
+
+，则相应的
+\begin_inset Formula $k=3$
+\end_inset
+
+，这种最多取
+\begin_inset Formula $13$
+\end_inset
+
+件的物品应被分成系数分别为
+\begin_inset Formula $1,2,4,6$
+\end_inset
+
+的四件物品。
+\end_layout
+
+\begin_layout Standard
+分成的这几件物品的系数和为
+\begin_inset Formula $M_{i}$
+\end_inset
+
+，表明不可能取多于
+\begin_inset Formula $M_{i}$
+\end_inset
+
+件的第
+\begin_inset Formula $i$
+\end_inset
+
+种物品。另外这种方法也能保证对于
+\begin_inset Formula $0\ldots M_{i}$
+\end_inset
+
+间的每一个整数，均可以用若干个系数的和表示。这里算法正确性的证明可以分
+\begin_inset Formula $0\ldots2^{k-1}$
+\end_inset
+
+和
+\begin_inset Formula $2^{k}\ldots M_{i}$
+\end_inset
+
+两段来分别讨论得出，希望读者自己思考尝试一下。
+\end_layout
+
+\begin_layout Standard
+这样就将第i种物品分成了
+\begin_inset Formula $O(\mathrm{log}M_{i})$
+\end_inset
+
+种物品，将原问题转化为了复杂度为
+\begin_inset Formula $O(V\Sigma\mathrm{{log}M_{i})}$
+\end_inset
+
+的01背包问题，是很大的改进。
+\end_layout
+
+\begin_layout Standard
+下面给出
+\begin_inset Formula $O(\mathrm{log}M)$
+\end_inset
+
+时间处理一件多重背包中物品的过程：
+\end_layout
+
+\begin_layout LyX-Code
+def 
+\begin_inset Formula $\mathsf{MultiplePack}$
+\end_inset
+
+(
+\begin_inset Formula $F$
+\end_inset
+
+,
+\begin_inset Formula $C$
+\end_inset
+
+,
+\begin_inset Formula $W$
+\end_inset
+
+,
+\begin_inset Formula $M$
+\end_inset
+
+)
+\end_layout
+
+\begin_layout LyX-Code
+    if 
+\begin_inset Formula $C\cdot M\geq V$
+\end_inset
+
+
+\end_layout
+
+\begin_layout LyX-Code
+        
+\begin_inset Formula $\mathsf{CompletePack}$
+\end_inset
+
+(
+\begin_inset Formula $F$
+\end_inset
+
+,
+\begin_inset Formula $C$
+\end_inset
+
+,
+\begin_inset Formula $W$
+\end_inset
+
+)
+\end_layout
+
+\begin_layout LyX-Code
+        return
+\end_layout
+
+\begin_layout LyX-Code
+    
+\begin_inset Formula $k:=1$
+\end_inset
+
+
+\end_layout
+
+\begin_layout LyX-Code
+    while 
+\begin_inset Formula $k<M$
+\end_inset
+
+
+\end_layout
+
+\begin_layout LyX-Code
+        
+\begin_inset Formula $\mathsf{ZeroOnePack}$
+\end_inset
+
+(
+\begin_inset Formula $kC$
+\end_inset
+
+,
+\begin_inset Formula $kW$
+\end_inset
+
+)
+\end_layout
+
+\begin_layout LyX-Code
+        
+\begin_inset Formula $M:=M-k$
+\end_inset
+
+
+\end_layout
+
+\begin_layout LyX-Code
+        
+\begin_inset Formula $k:=2k$
+\end_inset
+
+
+\end_layout
+
+\begin_layout LyX-Code
+    
+\begin_inset Formula $\mathsf{ZeroOnePack}$
+\end_inset
+
+(
+\begin_inset Formula $C\cdot M$
+\end_inset
+
+,
+\begin_inset Formula $W\cdot M$
+\end_inset
+
+) 
+\end_layout
+
+\begin_layout Standard
+希望你仔细体会这个伪代码，如果不太理解的话，不妨翻译成程序代码以后，单步执行几次，或者头脑加纸笔模拟一下，以加深理解。
+\end_layout
+
+\begin_layout Subsection
+\begin_inset Formula $\text{O(VN)}$
+\end_inset
+
+的算法
+\end_layout
+
+\begin_layout Standard
+多重背包问题同样有
+\begin_inset Formula $O(VN)$
+\end_inset
+
+复杂度的算法。这个算法基于基本算法的状态转移方程，但应用单调队列的方法使每个状态的值可以以均摊
+\begin_inset Formula $O(1)$
+\end_inset
+
+的时间求解。我最初了解到这个方法是在楼天成的“男人八题”幻灯片上。（TODO：是否在此插入单调队列的讲解呢？）
+\end_layout
+
+\begin_layout Subsection
+小结 
+\end_layout
+
+\begin_layout Standard
+在这一讲中，我们看到了将一个算法的复杂度由
+\begin_inset Formula $O(V\Sigma M_{i})$
+\end_inset
+
+改进到
+\begin_inset Formula $O(V\Sigma\mathrm{{log}M_{i})}$
+\end_inset
+
+的过程，还知道了存在复杂度为
+\begin_inset Formula $O(VN)$
+\end_inset
+
+的算法。
+\end_layout
+
+\begin_layout Standard
+希望你特别注意“拆分物品”的思想和方法，自己证明一下它的正确性，并将完整的程序代码写出来。
 \end_layout
 
 \end_body
