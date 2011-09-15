@@ -43,8 +43,8 @@
 \pdf_bookmarksopenlevel 2
 \pdf_breaklinks true
 \pdf_pdfborder true
-\pdf_colorlinks false
-\pdf_backref false
+\pdf_colorlinks true
+\pdf_backref section
 \pdf_pdfusetitle true
 \papersize a4paper
 \use_geometry false
@@ -80,12 +80,51 @@
 \begin_body
 
 \begin_layout Title
-背包问题九讲2.0
+背包问题九讲 2.0 alpha1
 \end_layout
 
 \begin_layout Author
 崔添翼 (Tianyi Cui, a.k.a.
  dd_engi)
+\end_layout
+
+\begin_layout Standard
+本文题为《背包问题九讲》，从属于《动态规划的思考艺术》系列。
+\end_layout
+
+\begin_layout Standard
+这系列文章的
+\begin_inset CommandInset href
+LatexCommand href
+name "第一版"
+target "http://love-oriented.com/pack/"
+
+\end_inset
+
+于2007年下半年使用EmacsMuse制作，以HTML格式发布到网上，转载众多，有一定影响力。
+\end_layout
+
+\begin_layout Standard
+2011年9月，本系列文章由原作者用LaTeX重新制作并全面修订，您现在看到的是2.0 alpha1版本，修订历史及最新版本请访问 
+\begin_inset CommandInset href
+LatexCommand href
+target "https://github.com/tianyicui/pack"
+
+\end_inset
+
+ 查阅。
+\end_layout
+
+\begin_layout Standard
+本文版权归原作者所有，采用 
+\begin_inset CommandInset href
+LatexCommand href
+name "CC BY-NC-SA"
+target "http://creativecommons.org/licenses/by-nc-sa/3.0/"
+
+\end_inset
+
+ 协议发布。
 \end_layout
 
 \begin_layout Standard
@@ -2310,6 +2349,961 @@ name "sec:泛化物品"
 \end_inset
 
 泛化物品
+\end_layout
+
+\begin_layout Subsection
+定义
+\end_layout
+
+\begin_layout Standard
+考虑这样一种物品，它并没有固定的费用和价值，而是它的价值随着你分配给它的费用而变化。这就是泛化物品的概念。
+\end_layout
+
+\begin_layout Standard
+更严格的定义之。在背包容量为
+\begin_inset Formula $V$
+\end_inset
+
+的背包问题中，泛化物品是一个定义域为
+\begin_inset Formula $0\ldots V$
+\end_inset
+
+中的整数的函数
+\begin_inset Formula $h$
+\end_inset
+
+，当分配给它的费用为
+\begin_inset Formula $v$
+\end_inset
+
+时，能得到的价值就是
+\begin_inset Formula $h(v)$
+\end_inset
+
+。
+\end_layout
+
+\begin_layout Standard
+这个定义有一点点抽象，另一种理解是一个泛化物品就是一个数组
+\begin_inset Formula $h[0\ldots V]$
+\end_inset
+
+，给它费用
+\begin_inset Formula $v$
+\end_inset
+
+，可得到价值
+\begin_inset Formula $h[v]$
+\end_inset
+
+。
+\end_layout
+
+\begin_layout Standard
+一个费用为
+\begin_inset Formula $c$
+\end_inset
+
+价值为
+\begin_inset Formula $w$
+\end_inset
+
+的物品，如果它是01背包中的物品，那么把它看成泛化物品，它就是除了
+\begin_inset Formula $h(c)=w$
+\end_inset
+
+外，其它函数值都为
+\begin_inset Formula $0$
+\end_inset
+
+的一个函数。如果它是完全背包中的物品，那么它可以看成这样一个函数，仅当
+\begin_inset Formula $v$
+\end_inset
+
+被
+\begin_inset Formula $c$
+\end_inset
+
+整除时有
+\begin_inset Formula $h(v)=w\cdot\frac{v}{c}$
+\end_inset
+
+，其它函数值均为
+\begin_inset Formula $0$
+\end_inset
+
+。如果它是多重背包中重复次数最多为
+\begin_inset Formula $m$
+\end_inset
+
+的物品，那么它对应的泛化物品的函数有
+\begin_inset Formula $h(v)=w\cdot\frac{v}{c}$
+\end_inset
+
+仅当
+\begin_inset Formula $v$
+\end_inset
+
+被
+\begin_inset Formula $c$
+\end_inset
+
+整除且
+\begin_inset Formula $\frac{v}{c}\leq n$
+\end_inset
+
+，其它情况函数值均为
+\begin_inset Formula $0$
+\end_inset
+
+。
+\end_layout
+
+\begin_layout Standard
+一个物品组可以看作一个泛化物品
+\begin_inset Formula $h$
+\end_inset
+
+。对于一个
+\begin_inset Formula $0\ldots V$
+\end_inset
+
+中的
+\begin_inset Formula $v$
+\end_inset
+
+，若物品组中不存在费用为
+\begin_inset Formula $v$
+\end_inset
+
+的物品，则
+\begin_inset Formula $h(v)=0$
+\end_inset
+
+，否则
+\begin_inset Formula $h(v)$
+\end_inset
+
+取值为所有费用为
+\begin_inset Formula $v$
+\end_inset
+
+的物品的最大价值。
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:分组的背包问题"
+
+\end_inset
+
+中每个主件及其附件集合等价于一个物品组，自然也可看作一个泛化物品。
+\end_layout
+
+\begin_layout Subsection
+泛化物品的和
+\end_layout
+
+\begin_layout Standard
+如果给定了两个泛化物品
+\begin_inset Formula $h$
+\end_inset
+
+和
+\begin_inset Formula $l$
+\end_inset
+
+，要用一定的费用从这两个泛化物品中得到最大的价值，这个问题怎么求呢？事实上，对于一个给定的费用
+\begin_inset Formula $v$
+\end_inset
+
+，只需枚举将这个费用如何分配给两个泛化物品就可以了。同样的，对于
+\begin_inset Formula $0\text{\ldots}V$
+\end_inset
+
+中的每一个整数
+\begin_inset Formula $v$
+\end_inset
+
+，可以求得费用
+\begin_inset Formula $v$
+\end_inset
+
+分配到
+\begin_inset Formula $h$
+\end_inset
+
+和
+\begin_inset Formula $l$
+\end_inset
+
+中的最大价值
+\begin_inset Formula $f(v)$
+\end_inset
+
+。也即
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+f(v)=\mathrm{max}\{h(k)+l(v-k)\:|\:0\leq k\leq v\}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+可以看到，这里的
+\begin_inset Formula $f$
+\end_inset
+
+是一个由泛化物品
+\begin_inset Formula $h$
+\end_inset
+
+和
+\begin_inset Formula $l$
+\end_inset
+
+决定的定义域为
+\begin_inset Formula $0\text{\ldots V}$
+\end_inset
+
+的函数，也就是说，
+\begin_inset Formula $f$
+\end_inset
+
+是一个由泛化物品
+\begin_inset Formula $h$
+\end_inset
+
+和
+\begin_inset Formula $l$
+\end_inset
+
+决定的泛化物品。
+\end_layout
+
+\begin_layout Standard
+我们将
+\begin_inset Formula $f$
+\end_inset
+
+定义为泛化物品
+\begin_inset Formula $h$
+\end_inset
+
+和
+\begin_inset Formula $l$
+\end_inset
+
+的和：
+\begin_inset Formula $h$
+\end_inset
+
+、
+\begin_inset Formula $l$
+\end_inset
+
+都是泛化物品，若函数
+\begin_inset Formula $f$
+\end_inset
+
+满足以上关系式，则称
+\begin_inset Formula $f$
+\end_inset
+
+是
+\begin_inset Formula $h$
+\end_inset
+
+与
+\begin_inset Formula $l$
+\end_inset
+
+的和。泛化物品和运算的时间复杂度取决于背包的容量，是
+\begin_inset Formula $O(V^{2})$
+\end_inset
+
+。
+\end_layout
+
+\begin_layout Standard
+由泛化物品的定义可知：在一个背包问题中，若将两个泛化物品代以它们的和，不影响问题的答案。事实上，对于其中的物品都是泛化物品的背包问题，求它的答案的过程也就是求所
+有这些泛化物品之和的过程。若问题的和为
+\begin_inset Formula $s$
+\end_inset
+
+，则答案就是
+\begin_inset Formula $s\text{(}0\ldots V)$
+\end_inset
+
+中的最大值。
+\end_layout
+
+\begin_layout Subsection
+背包问题的泛化物品 
+\end_layout
+
+\begin_layout Standard
+一个背包问题中，可能会给出很多条件，包括每种物品的费用、价值等属性，物品之间的分组、依赖等关系等。但肯定能将问题对应于某个泛化物品。也就是说，给定了所有条件以后
+，就可以对每个非负整数
+\begin_inset Formula $v$
+\end_inset
+
+求得：若背包容量为
+\begin_inset Formula $v$
+\end_inset
+
+，将物品装入背包可得到的最大价值是多少，这可以认为是定义在非负整数集上的一件泛化物品。这个泛化物品——或者说问题所对应的一个定义域为非负整数的函数——包含了关于
+问题本身的高度浓缩的信息。一般而言，求得这个泛化物品的一个子定义域（例如
+\begin_inset Formula $0\text{\ldots}V$
+\end_inset
+
+）的值之后，就可以根据这个函数的取值得到背包问题的最终答案。
+\end_layout
+
+\begin_layout Standard
+综上所述，一般而言，求解背包问题，即求解这个问题所对应的一个函数，即该问题的泛化物品。而求解某个泛化物品的一种常用方法就是将它表示为若干泛化物品的和然后求之。
+\end_layout
+
+\begin_layout Subsection
+小结
+\end_layout
+
+\begin_layout Standard
+本讲是我在学习函数式编程的Scheme语言时，用函数编程的眼光审视各类背包问题得出的理论。
+\end_layout
+
+\begin_layout Standard
+我想说：“思考”是一个程序员最重要的品质。简单的问题，深入思考以后，也能发现更多。
+\end_layout
+
+\begin_layout Section
+背包问题问法的变化
+\end_layout
+
+\begin_layout Standard
+以上涉及的各种背包问题都是要求在背包容量（费用）的限制下求可以取到的最大价值，但背包问题还有很多种灵活的问法，在这里值得提一下。但是我认为，只要深入理解了求背包
+问题最大价值的方法，即使问法变化了，也是不难想出算法的。
+\end_layout
+
+\begin_layout Standard
+例如，求解最多可以放多少件物品或者最多可以装满多少背包的空间。这都可以根据具体问题利用前面的方程求出所有状态的值（
+\begin_inset Formula $F$
+\end_inset
+
+数组）之后得到。
+\end_layout
+
+\begin_layout Standard
+还有，如果要求的是“总价值最小”“总件数最小”，只需简单的将上面的状态转移方程中的
+\begin_inset Formula $\mathrm{max}$
+\end_inset
+
+改成
+\begin_inset Formula $\mathrm{min}$
+\end_inset
+
+即可。
+\end_layout
+
+\begin_layout Standard
+下面说一些变化更大的问法。
+\end_layout
+
+\begin_layout Subsection
+输出方案
+\end_layout
+
+\begin_layout Standard
+一般而言，背包问题是要求一个最优值，如果要求输出这个最优值的方案，可以参照一般动态规划问题输出方案的方法：记录下每个状态的最优值是由状态转移方程的哪一项推出来的
+，换句话说，记录下它是由哪一个策略推出来的。便可根据这条策略找到上一个状态，从上一个状态接着向前推即可。
+\end_layout
+
+\begin_layout Standard
+还是以01背包为例，方程为
+\begin_inset Formula $F[i,v]=\mathrm{max}\{F[i-1,v],F[i-1,v-C_{i}]+W_{i}\}$
+\end_inset
+
+。再用一个数组
+\begin_inset Formula $G[i,v]$
+\end_inset
+
+，设
+\begin_inset Formula $G[i,v]=0$
+\end_inset
+
+表示推出
+\begin_inset Formula $F[i,v]$
+\end_inset
+
+的值时是采用了方程的前一项（也即
+\begin_inset Formula $F[i,v]=F[i-1,v]$
+\end_inset
+
+），
+\begin_inset Formula $G[i,v]=1$
+\end_inset
+
+表示采用了方程的后一项。注意这两项分别表示了两种策略：未选第
+\begin_inset Formula $i$
+\end_inset
+
+个物品及选了第
+\begin_inset Formula $i$
+\end_inset
+
+个物品。那么输出方案的伪代码可以这样写（设最终状态为
+\begin_inset Formula $F[N,V]$
+\end_inset
+
+）：
+\end_layout
+
+\begin_layout LyX-Code
+\begin_inset Formula $i:=N$
+\end_inset
+
+
+\end_layout
+
+\begin_layout LyX-Code
+\begin_inset Formula $v:=V$
+\end_inset
+
+
+\end_layout
+
+\begin_layout LyX-Code
+while 
+\begin_inset Formula $i>0$
+\end_inset
+
+
+\end_layout
+
+\begin_layout LyX-Code
+    if 
+\begin_inset Formula $G[i,v]=0$
+\end_inset
+
+
+\end_layout
+
+\begin_layout LyX-Code
+        print 未选第
+\begin_inset Formula $i$
+\end_inset
+
+项物品
+\end_layout
+
+\begin_layout LyX-Code
+    else if 
+\begin_inset Formula $G[i,v]=1$
+\end_inset
+
+
+\end_layout
+
+\begin_layout LyX-Code
+        print 
+\begin_inset Formula $ $
+\end_inset
+
+选了第
+\begin_inset Formula $i$
+\end_inset
+
+项物品
+\end_layout
+
+\begin_layout LyX-Code
+        
+\begin_inset Formula $v:=v-C_{i}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout LyX-Code
+    
+\begin_inset Formula $i:=i-1$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+另外，采用方程的前一项或后一项也可以在输出方案的过程中根据
+\begin_inset Formula $F[i,v]$
+\end_inset
+
+的值实时地求出来。也即，不须纪录
+\begin_inset Formula $G$
+\end_inset
+
+数组，将上述代码中的
+\begin_inset Formula $G[i,v]=0$
+\end_inset
+
+改成
+\begin_inset Formula $F[i,v]=F[i-1,v]$
+\end_inset
+
+，
+\begin_inset Formula $G[i,v]=1$
+\end_inset
+
+改成
+\begin_inset Formula $F[i,v]=F[i-1][v-C_{i}]+W_{i}$
+\end_inset
+
+也可。
+\end_layout
+
+\begin_layout Subsection
+输出字典序最小的最优方案 
+\end_layout
+
+\begin_layout Standard
+这里“字典序最小”的意思是
+\begin_inset Formula $1\ldots N$
+\end_inset
+
+号物品的选择方案排列出来以后字典序最小。以输出01背包最小字典序的方案为例。
+\end_layout
+
+\begin_layout Standard
+一般而言，求一个字典序最小的最优方案，只需要在转移时注意策略。
+\end_layout
+
+\begin_layout Standard
+首先，子问题的定义要略改一些。我们注意到，如果存在一个选了物品
+\begin_inset Formula $1$
+\end_inset
+
+的最优方案，那么答案一定包含物品
+\begin_inset Formula $1$
+\end_inset
+
+，原问题转化为一个背包容量为
+\begin_inset Formula $V-C_{1}$
+\end_inset
+
+，物品为
+\begin_inset Formula $2\ldots N$
+\end_inset
+
+的子问题。反之，如果答案不包含物品
+\begin_inset Formula $1$
+\end_inset
+
+，则转化成背包容量仍为
+\begin_inset Formula $V$
+\end_inset
+
+，物品为
+\begin_inset Formula $2\ldots N$
+\end_inset
+
+的子问题。
+\end_layout
+
+\begin_layout Standard
+不管答案怎样，子问题的物品都是以
+\begin_inset Formula $i\ldots N$
+\end_inset
+
+而非前所述的
+\begin_inset Formula $1\ldots i$
+\end_inset
+
+的形式来定义的，所以状态的定义和转移方程都需要改一下。
+\end_layout
+
+\begin_layout Standard
+但也许更简易的方法是，先把物品编号做
+\begin_inset Formula $x:=N+1-x$
+\end_inset
+
+的变换，在输出方案时再变换回来。在做完物品编号的变换后，可以按照前面经典的转移方程来求值。只是在输出方案时要注意，如果
+\begin_inset Formula $F[i,v]=F[i-1,v]$
+\end_inset
+
+和
+\begin_inset Formula $F[i,v]=F[i-1][v-C_{i}]+W_{i}$
+\end_inset
+
+都成立，应该按照后者来输出方案，即选择了物品
+\begin_inset Formula $i$
+\end_inset
+
+，输出其原来的编号
+\begin_inset Formula $N-1-i$
+\end_inset
+
+。
+\end_layout
+
+\begin_layout Subsection
+求方案总数 
+\end_layout
+
+\begin_layout Standard
+对于一个给定了背包容量、物品费用、物品间相互关系（分组、依赖等）的背包问题，除了再给定每个物品的价值后求可得到的最大价值外，还可以得到装满背包或将背包装至某一指
+定容量的方案总数。
+\end_layout
+
+\begin_layout Standard
+对于这类改变问法的问题，一般只需将状态转移方程中的
+\begin_inset Formula $\mathrm{max}$
+\end_inset
+
+改成
+\begin_inset Formula $\mathrm{sum}$
+\end_inset
+
+即可。例如若每件物品均是完全背包中的物品，转移方程即为
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+F[i,v]=\mathrm{sum}{F[i-1,v],F[i,v-C_{i}]}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+初始条件是
+\begin_inset Formula $F[0,0]=1$
+\end_inset
+
+。
+\end_layout
+
+\begin_layout Standard
+事实上，这样做可行的原因在于状态转移方程已经考察了所有可能的背包组成方案。
+\end_layout
+
+\begin_layout Subsection
+最优方案的总数
+\end_layout
+
+\begin_layout Standard
+这里的最优方案是指物品总价值最大的方案。以01背包为例。
+\end_layout
+
+\begin_layout Standard
+结合求最大总价值和方案总数两个问题的思路，最优方案的总数可以这样求：
+\begin_inset Formula $F[i,v]$
+\end_inset
+
+代表该状态的最大价值，
+\begin_inset Formula $G[i,v]$
+\end_inset
+
+表示这个子问题的最优方案的总数，则在求
+\begin_inset Formula $F[i,v]$
+\end_inset
+
+的同时求
+\begin_inset Formula $G[i,v]$
+\end_inset
+
+的伪代码如下：
+\end_layout
+
+\begin_layout LyX-Code
+\begin_inset Formula $G[0,0]=1$
+\end_inset
+
+
+\end_layout
+
+\begin_layout LyX-Code
+for 
+\begin_inset Formula $i=1$
+\end_inset
+
+ to 
+\begin_inset Formula $N$
+\end_inset
+
+
+\end_layout
+
+\begin_layout LyX-Code
+   for 
+\begin_inset Formula $v=0$
+\end_inset
+
+ to 
+\begin_inset Formula $V$
+\end_inset
+
+
+\end_layout
+
+\begin_layout LyX-Code
+        
+\begin_inset Formula $F[i,v]:=\mathrm{max}\{F[i-1,v],F[i-1,v-C_{i}]+W_{i}\}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout LyX-Code
+        
+\begin_inset Formula $G[i,v]:=0$
+\end_inset
+
+
+\end_layout
+
+\begin_layout LyX-Code
+        if 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\uuline off
+\uwave off
+\noun off
+\color none
+\lang english
+
+\begin_inset Formula $F[i,v]=F[i-1,v]$
+\end_inset
+
+
+\end_layout
+
+\begin_layout LyX-Code
+            
+\begin_inset Formula $G[i,v]+=G[i-1][v]$
+\end_inset
+
+
+\end_layout
+
+\begin_layout LyX-Code
+        if 
+\begin_inset Formula $F[i,v]=F[i-1,v-C_{i}]+W_{i}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout LyX-Code
+            
+\begin_inset Formula $G[i,v]+=G[i-1][v-C_{i}]$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+如果你是第一次看到这样的问题，请仔细体会上面的伪代码。
+\end_layout
+
+\begin_layout Subsection
+求次优解、第
+\begin_inset Formula $K$
+\end_inset
+
+优解 
+\end_layout
+
+\begin_layout Standard
+对于求次优解、第
+\begin_inset Formula $K$
+\end_inset
+
+优解类的问题，如果相应的最优解问题能写出状态转移方程、用动态规划解决，那么求次优解往往可以相同的复杂度解决，第
+\begin_inset Formula $K$
+\end_inset
+
+优解则比求最优解的复杂度上多一个系数
+\begin_inset Formula $K$
+\end_inset
+
+。
+\end_layout
+
+\begin_layout Standard
+其基本思想是，将每个状态都表示成有序队列，将状态转移方程中的
+\begin_inset Formula $\mathrm{max/min}$
+\end_inset
+
+转化成有序队列的合并。
+\end_layout
+
+\begin_layout Standard
+这里仍然以01背包为例讲解一下。
+\end_layout
+
+\begin_layout Standard
+首先看01背包求最优解的状态转移方程：
+\begin_inset Formula $F[i,v]=\mathrm{max}\{F[i-1,v],F[i-1,v-C_{i}]+W_{i}\}$
+\end_inset
+
+。如果要求第
+\begin_inset Formula $K$
+\end_inset
+
+优解，那么状态
+\begin_inset Formula $F[i,v]$
+\end_inset
+
+就应该是一个大小为
+\begin_inset Formula $K$
+\end_inset
+
+的队列
+\begin_inset Formula $F[i,v,1\ldots K]$
+\end_inset
+
+。其中
+\begin_inset Formula $F[i,v,k]$
+\end_inset
+
+表示前
+\begin_inset Formula $i$
+\end_inset
+
+个物品中，背包大小为
+\begin_inset Formula $v$
+\end_inset
+
+时，第
+\begin_inset Formula $k$
+\end_inset
+
+优解的值。这里也可以简单地理解为在原来的方程中加了一维来表示结果的优先次序。显然
+\begin_inset Formula $f[i,v,1\ldots K]$
+\end_inset
+
+这
+\begin_inset Formula $K$
+\end_inset
+
+个数是由大到小排列的，所以它可看作是一个有序队列。
+\end_layout
+
+\begin_layout Standard
+然后原方程就可以解释为：
+\begin_inset Formula $F[i,v]$
+\end_inset
+
+这个有序队列是由
+\begin_inset Formula $F[i-1,v]$
+\end_inset
+
+和
+\begin_inset Formula $F[i-1\text{,}v-C_{i}]+W_{i}$
+\end_inset
+
+这两个有序队列合并得到的。前者
+\begin_inset Formula $F[i-1][V]$
+\end_inset
+
+即
+\begin_inset Formula $F[i-1,v,1\ldots K]$
+\end_inset
+
+，后者
+\begin_inset Formula $F[i-1\text{,}v-C_{i}]+W_{i}$
+\end_inset
+
+则理解为在
+\begin_inset Formula $F[i-1\text{,}v-C_{i},1\ldots K]$
+\end_inset
+
+的每个数上加上
+\begin_inset Formula $W_{i}$
+\end_inset
+
+后得到的有序队列。合并这两个有序队列并将结果的前
+\begin_inset Formula $K$
+\end_inset
+
+项储存到
+\begin_inset Formula $f[i,v,1\ldots K]$
+\end_inset
+
+中的复杂度是
+\begin_inset Formula $O(K)$
+\end_inset
+
+。最后的第
+\begin_inset Formula $K$
+\end_inset
+
+优解的答案是
+\begin_inset Formula $F[N,V,K]$
+\end_inset
+
+。总的时间复杂度是
+\begin_inset Formula $O(VNK)$
+\end_inset
+
+。
+\end_layout
+
+\begin_layout Standard
+为什么这个方法正确呢？实际上，一个正确的状态转移方程的求解过程遍历了所有可用的策略，也就覆盖了问题的所有方案。只不过由于是求最优解，所以其它在任何一个策略上达不
+到最优的方案都被忽略了。如果把每个状态表示成一个大小为
+\begin_inset Formula $K$
+\end_inset
+
+的数组，并在这个数组中有序地保存该状态可取到的前
+\begin_inset Formula $K$
+\end_inset
+
+个最优值。那么，对于任两个状态的
+\begin_inset Formula $\mathrm{max}$
+\end_inset
+
+运算等价于两个由大到小的有序队列的合并。
+\end_layout
+
+\begin_layout Standard
+另外还要注意题目对于“第
+\begin_inset Formula $K$
+\end_inset
+
+优解”的定义，是要求将策略不同但权值相同的两个方案是看作同一个解还是不同的解。如果是前者，则维护有序队列时要保证队列里的数没有重复的。
+\end_layout
+
+\begin_layout Subsection
+小结
+\end_layout
+
+\begin_layout Standard
+显然，这里不可能穷尽背包类动态规划问题所有的问法。甚至还存在一类将背包类动态规划问题与其它领域（例如数论、图论）结合起来的问题，在这篇论背包问题的专文中也不会论
+及。但只要深刻领会前述所有类别的背包问题的思路和状态转移方程，遇到其它的变形问题，应该也不难想出算法。
+\end_layout
+
+\begin_layout Standard
+触类旁通、举一反三，应该也是一个程序员应有的品质吧。
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
 \end_layout
 
 \end_body
