@@ -1774,11 +1774,156 @@ for
 它们简单地组合起来以后就得到了这样一道一定能吓倒不少人的题目。但只要基础扎实，领会三种基本背包问题的思想，就可以做到把困难的题目拆分成简单的题目来解决。
 \end_layout
 
+\begin_layout Section
+二维费用的背包问题
+\end_layout
+
+\begin_layout Subsection
+问题
+\end_layout
+
 \begin_layout Standard
+二维费用的背包问题是指：对于每件物品，具有两种不同的空间耗费，选择这件物品必须同时付出这两种代价。对于每种代价都有一个可付出的最大值（背包容量）。问怎样选择物品
+可以得到最大的价值。
+\end_layout
+
+\begin_layout Standard
+设这两种代价分别为代价一和代价二，第
+\begin_inset Formula $i$
+\end_inset
+
+件物品所需的两种代价分别为
+\begin_inset Formula $C_{i}$
+\end_inset
+
+和
+\begin_inset Formula $D_{i}$
+\end_inset
+
+。两种代价可付出的最大值（两种背包容量）分别为
+\begin_inset Formula $V$
+\end_inset
+
+和
+\begin_inset Formula $U$
+\end_inset
+
+。物品的价值为
+\begin_inset Formula $W_{i}$
+\end_inset
+
+。
+\end_layout
+
+\begin_layout Subsection
+算法
+\end_layout
+
+\begin_layout Standard
+费用加了一维，只需状态也加一维即可。设
+\begin_inset Formula $F[i,v,u]$
+\end_inset
+
+表示前
+\begin_inset Formula $i$
+\end_inset
+
+件物品付出两种代价分别为
+\begin_inset Formula $v$
+\end_inset
+
+和
+\begin_inset Formula $u$
+\end_inset
+
+时可获得的最大价值。状态转移方程就是：
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+F[i,v,u]=\mathrm{max\{F[i-1,v,u],F[i-1,v-C_{i},u-D_{i}]+W_{i}\}}
+\]
+
+\end_inset
+
 
 \end_layout
 
-\begin_layout LyX-Code
+\begin_layout Standard
+如前述优化空间复杂度的方法，可以只使用二维的数组：当每件物品只可以取一次时变量
+\begin_inset Formula $v$
+\end_inset
+
+和
+\begin_inset Formula $u$
+\end_inset
+
+采用逆序的循环，当物品有如完全背包问题时采用顺序的循环，当物品有如多重背包问题时拆分物品。
+\end_layout
+
+\begin_layout Standard
+这里就不再给出伪代码了，相信有了前面的基础，读者应该能够自己实现出这个问题的程序。
+\end_layout
+
+\begin_layout Subsection
+物品总个数的限制
+\end_layout
+
+\begin_layout Standard
+有时，“二维费用”的条件是以这样一种隐含的方式给出的：最多只能取
+\begin_inset Formula $U$
+\end_inset
+
+件物品。这事实上相当于每件物品多了一种“件数”的费用，每个物品的件数费用均为
+\begin_inset Formula $1$
+\end_inset
+
+，可以付出的最大件数费用为
+\begin_inset Formula $U$
+\end_inset
+
+。换句话说，设
+\begin_inset Formula $F[v,u]$
+\end_inset
+
+表示付出费用
+\begin_inset Formula $v$
+\end_inset
+
+、最多选
+\begin_inset Formula $u$
+\end_inset
+
+件时可得到的最大价值，则根据物品的类型（01、完全、多重）用不同的方法循环更新，最后在
+\begin_inset Formula $f[0\ldots V,0\ldots U]$
+\end_inset
+
+范围内寻找答案。
+\end_layout
+
+\begin_layout Subsection
+复整数域上的背包问题
+\end_layout
+
+\begin_layout Standard
+另一种看待二维背包问题的思路是：将它看待成复整数域上的背包问题。也就是说，背包的容量以及每件物品的费用都是一个复整数。而常见的一维背包问题则是自然数域上的背包问
+题。所以说，一维背包的种种思想方法，往往可以应用于二位背包问题的求解中，因为只是数域扩大了而已。
+\end_layout
+
+\begin_layout Standard
+作为这种思想的练习，你可以尝试将后文中提到的“子集和问题”扩展到二维，并试图用同样的复杂度解决。
+\end_layout
+
+\begin_layout Subsection
+小结
+\end_layout
+
+\begin_layout Standard
+当发现由熟悉的动态规划题目变形得来的题目时，在原来的状态中加一维以满足新的限制是一种比较通用的方法。希望你能从本讲中初步体会到这种方法。
+\end_layout
+
+\begin_layout Standard
 
 \end_layout
 
