@@ -5,6 +5,11 @@
 \textclass article
 \begin_preamble
 \usepackage{indentfirst}
+\setlength{\parindent}{2em}
+
+\usepackage{datetime}
+\renewcommand{\dateseparator}{-}
+
 \setmainfont[BoldFont=STSong,ItalicFont=STKaiti]{STSong}
 \setsansfont[BoldFont=STHeiti]{STHeiti}
 \setmonofont{STFangsong}
@@ -27,7 +32,7 @@
 \font_sf_scale 100
 \font_tt_scale 100
 
-\graphics xetex
+\graphics none
 \default_output_format default
 \output_sync 0
 \bibtex_command default
@@ -80,12 +85,63 @@
 \begin_body
 
 \begin_layout Title
-背包问题九讲 2.0 alpha1
+背包问题九讲 2.0 beta1
 \end_layout
 
 \begin_layout Author
-崔添翼 (Tianyi Cui, a.k.a.
- dd_engi)
+崔添翼 (Tianyi Cui)
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+a.k.a.
+ dd_engi
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Date
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+yyyymmdddate
+\backslash
+today
+\end_layout
+
+\end_inset
+
+
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+Build 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+pdfdate
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -105,7 +161,7 @@ target "http://love-oriented.com/pack/"
 \end_layout
 
 \begin_layout Standard
-2011年9月，本系列文章由原作者用LaTeX重新制作并全面修订，您现在看到的是2.0 alpha1版本，修订历史及最新版本请访问 
+2011年9月，本系列文章由原作者用LaTeX重新制作并全面修订，您现在看到的是2.0 alpha版本，修订历史及最新版本请访问 
 \begin_inset CommandInset href
 LatexCommand href
 target "https://github.com/tianyicui/pack"
@@ -163,8 +219,18 @@ name "sec:01背包问题"
 \begin_inset Formula $i$
 \end_inset
 
-件物品耗费的空间是
+件物品耗费的费用是
 \begin_inset Formula $C_{i}$
+\end_inset
+
+
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+也即占用背包的空间容量，后文统一称之为“费用(cost)”
+\end_layout
+
 \end_inset
 
 ，得到的价值是
@@ -274,7 +340,7 @@ F[i,v]=\mathrm{max}\{F[i-1,v],F[i-1,v-C_{i}]+W_{i}\}
 \end_layout
 
 \begin_layout LyX-Code
-\begin_inset Formula $F[0,0..V]=0$
+\begin_inset Formula $F[0,0..V]\,\leftarrow0$
 \end_inset
 
 
@@ -282,11 +348,7 @@ F[i,v]=\mathrm{max}\{F[i-1,v],F[i-1,v-C_{i}]+W_{i}\}
 
 \begin_layout LyX-Code
 for 
-\begin_inset Formula $i$
-\end_inset
-
- = 
-\begin_inset Formula $1$
+\begin_inset Formula $i\,\leftarrow1$
 \end_inset
 
  to 
@@ -298,11 +360,7 @@ for
 
 \begin_layout LyX-Code
     for 
-\begin_inset Formula $v$
-\end_inset
-
- = 
-\begin_inset Formula $C_{i}$
+\begin_inset Formula $v\,\leftarrow C_{i}$
 \end_inset
 
  to 
@@ -314,11 +372,7 @@ for
 
 \begin_layout LyX-Code
         
-\begin_inset Formula $F[i,v]$
-\end_inset
-
- = 
-\begin_inset Formula $\mathrm{max}\{F[i-1,v],F[i-1,v-C_{i}]+W_{i}\}$
+\begin_inset Formula $F[i,v]\,\leftarrow\mathrm{max}\{F[i-1,v],F[i-1,v-C_{i}]+W_{i}\}$
 \end_inset
 
 
@@ -342,15 +396,15 @@ for
 
 \begin_layout Standard
 先考虑上面讲的基本思路如何实现，肯定是有一个主循环
-\begin_inset Formula $i=1..N$
+\begin_inset Formula $i\text{\,}\leftarrow1\ldots N$
 \end_inset
 
 ，每次算出来二维数组
-\begin_inset Formula $F[i,0..V]$
+\begin_inset Formula $F[i,0\ldots V]$
 \end_inset
 
 的所有值。那么，如果只用一个数组
-\begin_inset Formula $F[0..V]$
+\begin_inset Formula $F[0\ldots V]$
 \end_inset
 
 ，能不能保证第
@@ -397,15 +451,19 @@ for
 \begin_inset Formula $F[i-1,v-C_{i}]$
 \end_inset
 
-的值呢？事实上，这要求在每次主循环中我们以
-\begin_inset Formula $v=V..0$
+的值呢？
+\end_layout
+
+\begin_layout Standard
+事实上，这要求在每次主循环中我们以
+\begin_inset Formula $v\,\leftarrow V\ldots0$
 \end_inset
 
 的递减顺序计算
 \begin_inset Formula $F[v]$
 \end_inset
 
-，这样才能保证推
+，这样才能保证计算
 \begin_inset Formula $F[v]$
 \end_inset
 
@@ -421,7 +479,7 @@ for
 \end_layout
 
 \begin_layout LyX-Code
-\begin_inset Formula $F[0..V]=0$
+\begin_inset Formula $F[0..V]\text{\,\leftarrow}0$
 \end_inset
 
 
@@ -429,11 +487,7 @@ for
 
 \begin_layout LyX-Code
 for 
-\begin_inset Formula $i$
-\end_inset
-
- = 
-\begin_inset Formula $1$
+\begin_inset Formula $i\,\leftarrow1$
 \end_inset
 
  to 
@@ -445,11 +499,7 @@ for
 
 \begin_layout LyX-Code
     for 
-\begin_inset Formula $v$
-\end_inset
-
- = 
-\begin_inset Formula $V$
+\begin_inset Formula $v\,\leftarrow V$
 \end_inset
 
  to 
@@ -461,11 +511,7 @@ for
 
 \begin_layout LyX-Code
         
-\begin_inset Formula $F[v]$
-\end_inset
-
- = 
-\begin_inset Formula $\mathrm{max}\{F[v],F[v-C_{i}]+W_{i}\}$
+\begin_inset Formula $F[v]\,\leftarrow\mathrm{max}\{F[v],F[v-C_{i}]+W_{i}\}$
 \end_inset
 
 
@@ -473,7 +519,7 @@ for
 
 \begin_layout Standard
 其中的
-\begin_inset Formula $F[v]=\mathrm{max}\{F[v],F[v-C_{i}]+W_{i}\}$
+\begin_inset Formula $F[v]\,\leftarrow\mathrm{max}\{F[v],F[v-C_{i}]+W_{i}\}$
 \end_inset
 
 一句，恰就对应于我们原来的转移方程，因为现在的
@@ -517,11 +563,7 @@ def
 
 \begin_layout LyX-Code
     for 
-\begin_inset Formula $v$
-\end_inset
-
- = 
-\begin_inset Formula $V$
+\begin_inset Formula $v\,\leftarrow V$
 \end_inset
 
  to 
@@ -533,11 +575,11 @@ def
 
 \begin_layout LyX-Code
         
-\begin_inset Formula $F[v]$
+\begin_inset Formula $ $
 \end_inset
 
- = 
-\begin_inset Formula $\mathrm{max}(F[v],f[v-C]+W)$
+
+\begin_inset Formula $F[v]\,\leftarrow\mathrm{max}(F[v],f[v-C]+W)$
 \end_inset
 
 
@@ -548,8 +590,15 @@ def
 \end_layout
 
 \begin_layout LyX-Code
-for i = 
-\begin_inset Formula $1$
+\begin_inset Formula $F[0..V]\text{\,\leftarrow}0$
+\end_inset
+
+
+\end_layout
+
+\begin_layout LyX-Code
+for 
+\begin_inset Formula $i\,\leftarrow1$
 \end_inset
 
  to 
@@ -642,7 +691,7 @@ for i =
 \end_layout
 
 \begin_layout Standard
-这个小技巧完全可以推广到其它类型的背包问题，后面也就不再对进行状态转移之前的初始化进行讲解。
+这个小技巧完全可以推广到其它类型的背包问题，后面不再对进行状态转移之前的初始化进行讲解。
 \end_layout
 
 \begin_layout Subsection
@@ -655,11 +704,7 @@ for i =
 
 \begin_layout LyX-Code
 for 
-\begin_inset Formula $i$
-\end_inset
-
- = 
-\begin_inset Formula $1$
+\begin_inset Formula $i\,\leftarrow1$
 \end_inset
 
  to 
@@ -671,11 +716,7 @@ for
 
 \begin_layout LyX-Code
     for 
-\begin_inset Formula $v$
-\end_inset
-
- = 
-\begin_inset Formula $V$
+\begin_inset Formula $v\,\leftarrow V$
 \end_inset
 
  to 
@@ -691,11 +732,7 @@ for
 
 \begin_layout LyX-Code
 for 
-\begin_inset Formula $i$
-\end_inset
-
- = 
-\begin_inset Formula $1$
+\begin_inset Formula $i\,\leftarrow1$
 \end_inset
 
  to 
@@ -707,11 +744,7 @@ for
 
 \begin_layout LyX-Code
     for 
-\begin_inset Formula $v$
-\end_inset
-
- = 
-\begin_inset Formula $V$
+\begin_inset Formula $v\,\leftarrow V$
 \end_inset
 
  to 
@@ -761,15 +794,15 @@ name "sec:完全背包问题"
 \begin_inset Formula $i$
 \end_inset
 
-种物品的耗费的空间是
+种物品的费用是
 \begin_inset Formula $C_{i}$
 \end_inset
 
-，得到的价值是
+，价值是
 \begin_inset Formula $W_{i}$
 \end_inset
 
-。求解：将哪些物品装入背包，可使这些物品的耗费的空间总和不超过背包容量，且价值总和最大。
+。求解：将哪些物品装入背包，可使这些物品的耗费的费用总和不超过背包容量，且价值总和最大。
 \end_layout
 
 \begin_layout Subsection
@@ -793,7 +826,7 @@ name "sec:完全背包问题"
 \begin_inset Formula $\left\lfloor V/C_{i}\right\rfloor $
 \end_inset
 
-件等很多种。
+件等许多种。
 \end_layout
 
 \begin_layout Standard
@@ -882,7 +915,7 @@ name "sub:一个简单有效的优化"
 \end_layout
 
 \begin_layout Standard
-这个优化的正确性是显然的：任何情况下都可将价值小耗费高的
+这个优化的正确性是显然的：任何情况下都可将价值小费用高的
 \begin_inset Formula $j$
 \end_inset
 
@@ -924,11 +957,11 @@ name "sub:一个简单有效的优化"
 \end_inset
 
 种物品最多选
-\begin_inset Formula $\left\lfloor \text{\frac{{V}}{C_{i}}}\right\rfloor $
+\begin_inset Formula $\left\lfloor V/C_{i}\right\rfloor $
 \end_inset
 
 件，于是可以把第i种物品转化为
-\begin_inset Formula $\left\lfloor \text{\frac{{V}}{C_{i}}}\right\rfloor $
+\begin_inset Formula $\left\lfloor V/C_{i}\right\rfloor $
 \end_inset
 
 件费用及价值均不变的物品，然后求解这个01背包问题。这样的做法完全没有改进时间复杂度，但这种方法也指明了将完全背包问题转化为01背包问题的思路：将一种物品拆成多
@@ -977,7 +1010,7 @@ name "sub:一个简单有效的优化"
 \end_inset
 
 件物品的和。这样一来就把每种物品拆成
-\begin_inset Formula $O(\mathrm{log}\text{\frac{{V}}{C_{i}}})$
+\begin_inset Formula $O(\mathrm{log}\left\lfloor V/C_{i}\right\rfloor )$
 \end_inset
 
 件物品，是一个很大的改进。
@@ -995,7 +1028,7 @@ name "sub:一个简单有效的优化"
 \end_layout
 
 \begin_layout LyX-Code
-\begin_inset Formula $F[0..V]=0$
+\begin_inset Formula $F[0..V]\text{\,\leftarrow}0$
 \end_inset
 
 
@@ -1003,11 +1036,7 @@ name "sub:一个简单有效的优化"
 
 \begin_layout LyX-Code
 for 
-\begin_inset Formula $i$
-\end_inset
-
- = 
-\begin_inset Formula $1$
+\begin_inset Formula $i\,\leftarrow1$
 \end_inset
 
  to 
@@ -1019,11 +1048,7 @@ for
 
 \begin_layout LyX-Code
     for 
-\begin_inset Formula $v$
-\end_inset
-
- = 
-\begin_inset Formula $C_{i}$
+\begin_inset Formula $v\,\leftarrow C_{i}$
 \end_inset
 
  to 
@@ -1035,11 +1060,11 @@ for
 
 \begin_layout LyX-Code
         
-\begin_inset Formula $F[v]$
+\begin_inset Formula $ $
 \end_inset
 
- = 
-\begin_inset Formula $\mathrm{max}(F[v],F[v-C_{i}]+W_{i})$
+
+\begin_inset Formula $F[v]\,\leftarrow\mathrm{max}(F[v],F[v-C_{i}]+W_{i})$
 \end_inset
 
 
@@ -1150,11 +1175,7 @@ def
 
 \begin_layout LyX-Code
     for 
-\begin_inset Formula $v$
-\end_inset
-
- = 
-\begin_inset Formula $C$
+\begin_inset Formula $v\,\leftarrow C$
 \end_inset
 
  to 
@@ -1166,11 +1187,7 @@ def
 
 \begin_layout LyX-Code
         
-\begin_inset Formula $F[v]$
-\end_inset
-
- = 
-\begin_inset Formula $\mathrm{max}\{F[v],f[v-C]+W\}$
+\begin_inset Formula $F[v]\,\leftarrow\mathrm{max}\{F[v],f[v-C]+W\}$
 \end_inset
 
 
@@ -1181,8 +1198,8 @@ def
 \end_layout
 
 \begin_layout Standard
-完全背包问题也是一个相当基础的背包问题，它有两个状态转移方程。希望你能够对这两个状态转移方程都仔细地体会，不仅记住，也要弄明白它们是怎么得出来的，最好能够自己想
-一种得到这些方程的方法。
+完全背包问题也是一个相当基础的背包问题，它有两个状态转移方程。希望读者能够对这两个状态转移方程都仔细地体会，不仅记住，也要弄明白它们是怎么得出来的，最好能够自己
+想一种得到这些方程的方法。
 \end_layout
 
 \begin_layout Standard
@@ -1488,7 +1505,7 @@ def
 
 \begin_layout LyX-Code
     
-\begin_inset Formula $k:=1$
+\begin_inset Formula $k\,\leftarrow1$
 \end_inset
 
 
@@ -1520,7 +1537,7 @@ def
 
 \begin_layout LyX-Code
         
-\begin_inset Formula $M:=M-k$
+\begin_inset Formula $M\text{\,\leftarrow}M-k$
 \end_inset
 
 
@@ -1528,7 +1545,7 @@ def
 
 \begin_layout LyX-Code
         
-\begin_inset Formula $k:=2k$
+\begin_inset Formula $k\,\leftarrow2k$
 \end_inset
 
 
@@ -1547,7 +1564,7 @@ def
 \begin_inset Formula $W\cdot M$
 \end_inset
 
-) 
+)
 \end_layout
 
 \begin_layout Standard
@@ -1555,22 +1572,183 @@ def
 \end_layout
 
 \begin_layout Subsection
-\begin_inset Formula $\text{O(VN)}$
+可行性问题
+\begin_inset Formula $O(VN)$
 \end_inset
 
 的算法
 \end_layout
 
 \begin_layout Standard
-多重背包问题同样有
+当问题是“每种有若干件的物品能否填满给定容量的背包”，只须考虑填满背包的可行性，不需考虑每件物品的价值时，多重背包问题同样有
 \begin_inset Formula $O(VN)$
 \end_inset
 
-复杂度的算法。这个算法基于基本算法的状态转移方程，但应用单调队列的方法使每个状态的值可以以均摊
+复杂度的算法。
+\end_layout
+
+\begin_layout Standard
+例如，可以使用单调队列的数据结构，优化基本算法的状态转移方程，使每个状态的值可以以均摊
 \begin_inset Formula $O(1)$
 \end_inset
 
-的时间求解。我最初了解到这个方法是在楼天成的“男人八题”幻灯片上。（TODO：是否在此插入单调队列的讲解呢？）
+的时间求解。
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+我最初了解到这个方法是在楼天成的“男人八题”幻灯片上。
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+下面介绍一种实现较为简单的
+\begin_inset Formula $O(VN)$
+\end_inset
+
+复杂度解多重背包问题的算法。它的基本思想是这样的：设
+\begin_inset Formula $F[i,j]$
+\end_inset
+
+表示“用了前
+\begin_inset Formula $i$
+\end_inset
+
+种物品填满容量为
+\begin_inset Formula $j$
+\end_inset
+
+的背包后，最多还剩下几个第
+\begin_inset Formula $i$
+\end_inset
+
+种物品可用”，如果
+\begin_inset Formula $F[i,j]=-1$
+\end_inset
+
+则说明这种状态不可行，若可行应满足
+\begin_inset Formula $0\leq F[i,j]\leq M_{i}$
+\end_inset
+
+。
+\end_layout
+
+\begin_layout Standard
+递推求
+\begin_inset Formula $F[i,j]$
+\end_inset
+
+的伪代码如下：
+\end_layout
+
+\begin_layout LyX-Code
+\begin_inset Formula $F[0,1\ldots V]\,\leftarrow-1$
+\end_inset
+
+
+\end_layout
+
+\begin_layout LyX-Code
+\begin_inset Formula $F[0,0]\,\leftarrow0$
+\end_inset
+
+
+\end_layout
+
+\begin_layout LyX-Code
+for 
+\begin_inset Formula $i\,\leftarrow1$
+\end_inset
+
+ to 
+\begin_inset Formula $N$
+\end_inset
+
+
+\end_layout
+
+\begin_layout LyX-Code
+    
+\begin_inset Formula $ $
+\end_inset
+
+for 
+\begin_inset Formula $j\,\leftarrow0$
+\end_inset
+
+ to 
+\begin_inset Formula $V$
+\end_inset
+
+
+\end_layout
+
+\begin_layout LyX-Code
+        if 
+\begin_inset Formula $F[i-1][j]\geq0$
+\end_inset
+
+
+\end_layout
+
+\begin_layout LyX-Code
+            
+\begin_inset Formula $F[i][j]=M_{i}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout LyX-Code
+        else
+\end_layout
+
+\begin_layout LyX-Code
+            
+\begin_inset Formula $F[i][j]=-1$
+\end_inset
+
+
+\end_layout
+
+\begin_layout LyX-Code
+    for 
+\begin_inset Formula $j\,\leftarrow0$
+\end_inset
+
+ to 
+\begin_inset Formula $V-C_{i}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout LyX-Code
+        if 
+\begin_inset Formula $F[i][j]>0$
+\end_inset
+
+
+\end_layout
+
+\begin_layout LyX-Code
+            
+\begin_inset Formula $F[i][j+C_{i}]\,\leftarrow\mathrm{max}\{F[i][j+C_{i}],F[i][j]-1\}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+最终
+\begin_inset Formula $F[N][0\ldots V]$
+\end_inset
+
+便是多重背包可行性问题的答案。
 \end_layout
 
 \begin_layout Subsection
@@ -1646,7 +1824,7 @@ reference "sec:多重背包问题"
 
 \begin_layout LyX-Code
 for 
-\begin_inset Formula $i=1$
+\begin_inset Formula $i\,\leftarrow1$
 \end_inset
 
  to 
@@ -1666,7 +1844,7 @@ for
 
 \begin_layout LyX-Code
         for 
-\begin_inset Formula $v=V$
+\begin_inset Formula $v\,\leftarrow V$
 \end_inset
 
  to 
@@ -1678,11 +1856,7 @@ for
 
 \begin_layout LyX-Code
             
-\begin_inset Formula $F[v]$
-\end_inset
-
- = 
-\begin_inset Formula $\mathrm{max}(F[v],F[v-C_{i}]+W_{i})$
+\begin_inset Formula $F[v]\,\leftarrow\mathrm{max}(F[v],F[v-C_{i}]+W_{i})$
 \end_inset
 
 
@@ -1698,7 +1872,7 @@ for
 
 \begin_layout LyX-Code
         for 
-\begin_inset Formula $v=C_{i}$
+\begin_inset Formula $v\,\leftarrow C_{i}$
 \end_inset
 
  to 
@@ -1710,11 +1884,7 @@ for
 
 \begin_layout LyX-Code
             
-\begin_inset Formula $F[v]$
-\end_inset
-
- = 
-\begin_inset Formula $\mathrm{max}(F[v],F[v-C_{i}]+W_{i})$
+\begin_inset Formula $F[v]\,\leftarrow\mathrm{max}(F[v],F[v-C_{i}]+W_{i})$
 \end_inset
 
 
@@ -1741,12 +1911,12 @@ for
 \end_layout
 
 \begin_layout Standard
-当然，最清晰的写法是调用我们前面给出的三个过程。
+最清晰的写法是调用我们前面给出的三个过程。
 \end_layout
 
 \begin_layout LyX-Code
 for 
-\begin_inset Formula $i=1$
+\begin_inset Formula $i\,\leftarrow1$
 \end_inset
 
  to 
@@ -1867,16 +2037,16 @@ for
 \end_layout
 
 \begin_layout Standard
-二维费用的背包问题是指：对于每件物品，具有两种不同的空间耗费，选择这件物品必须同时付出这两种代价。对于每种代价都有一个可付出的最大值（背包容量）。问怎样选择物品
-可以得到最大的价值。
+二维费用的背包问题是指：对于每件物品，具有两种不同的费用，选择这件物品必须同时付出这两种费用。对于每种费用都有一个可付出的最大值（背包容量）。问怎样选择物品可以
+得到最大的价值。
 \end_layout
 
 \begin_layout Standard
-设这两种代价分别为代价一和代价二，第
+设第
 \begin_inset Formula $i$
 \end_inset
 
-件物品所需的两种代价分别为
+件物品所需的两种费用分别为
 \begin_inset Formula $C_{i}$
 \end_inset
 
@@ -1884,7 +2054,7 @@ for
 \begin_inset Formula $D_{i}$
 \end_inset
 
-。两种代价可付出的最大值（两种背包容量）分别为
+。两种费用可付出的最大值（也即两种背包容量）分别为
 \begin_inset Formula $V$
 \end_inset
 
@@ -1912,7 +2082,7 @@ for
 \begin_inset Formula $i$
 \end_inset
 
-件物品付出两种代价分别为
+件物品付出两种费用分别为
 \begin_inset Formula $v$
 \end_inset
 
@@ -2086,7 +2256,7 @@ F[k,v]=\mathrm{max}\{F[k-1,v],F[k-1,v-C_{i}]+W_{i}\:|\:\mathrm{item}\: i\in\math
 
 \begin_layout LyX-Code
 for 
-\begin_inset Formula $k=1$
+\begin_inset Formula $k\,\leftarrow1$
 \end_inset
 
  to 
@@ -2098,7 +2268,7 @@ for
 
 \begin_layout LyX-Code
     for 
-\begin_inset Formula $v=V$
+\begin_inset Formula $v\,\leftarrow V$
 \end_inset
 
  to 
@@ -2109,7 +2279,7 @@ for
 \end_layout
 
 \begin_layout LyX-Code
-        for item 
+        for all item 
 \begin_inset Formula $i$
 \end_inset
 
@@ -2122,7 +2292,7 @@ for
 
 \begin_layout LyX-Code
             
-\begin_inset Formula $F[v]=\mathrm{max}\{F[v],F[v-C_{i}]+W_{i}\}$
+\begin_inset Formula $F[v]\,\leftarrow\mathrm{max}\{F[v],F[v-C_{i}]+W_{i}\}$
 \end_inset
 
 
@@ -2197,7 +2367,7 @@ name "sec:有依赖的背包问题"
 \end_layout
 
 \begin_layout Standard
-这个问题由NOIP2006题目中金明的预算方案一题扩展而来。遵从该题的提法，将不依赖于别的物品的物品称为“主件”，依赖于某主件的物品称为“附件”。由这个问题的简
+这个问题由NOIP2006中“金明的预算方案”一题扩展而来。遵从该题的提法，将不依赖于别的物品的物品称为“主件”，依赖于某主件的物品称为“附件”。由这个问题的简
 化条件可知所有的物品由若干主件和依赖于每个主件的一个附件集合组成。
 \end_layout
 
@@ -2338,7 +2508,7 @@ NOIP2006的那道背包问题我做得很失败，写了上百行的代码，却
 \end_layout
 
 \begin_layout Standard
-后来，我在《背包问题九讲》第一版中总结此事时说：“失败不是什么丢人的事情，从失败中全无收获才是。”NOIP2007我得了满分。
+后来，我在《背包问题九讲》第一版中总结此事时说：“失败不是什么丢人的事情，从失败中全无收获才是。”之后的NOIP2007的比赛中，我得了满分。
 \end_layout
 
 \begin_layout Section
@@ -2698,7 +2868,7 @@ f(v)=\mathrm{max}\{h(k)+l(v-k)\:|\:0\leq k\leq v\}
 \end_layout
 
 \begin_layout Standard
-还有，如果要求的是“总价值最小”“总件数最小”，只需简单的将上面的状态转移方程中的
+还有，如果要求的是“总价值最小”“总件数最小”，只需将状态转移方程中的
 \begin_inset Formula $\mathrm{max}$
 \end_inset
 
@@ -2763,14 +2933,14 @@ f(v)=\mathrm{max}\{h(k)+l(v-k)\:|\:0\leq k\leq v\}
 \end_layout
 
 \begin_layout LyX-Code
-\begin_inset Formula $i:=N$
+\begin_inset Formula $i\text{\,\leftarrow}N$
 \end_inset
 
 
 \end_layout
 
 \begin_layout LyX-Code
-\begin_inset Formula $v:=V$
+\begin_inset Formula $v\,\leftarrow V$
 \end_inset
 
 
@@ -2822,7 +2992,7 @@ while
 
 \begin_layout LyX-Code
         
-\begin_inset Formula $v:=v-C_{i}$
+\begin_inset Formula $v\,\leftarrow sv-C_{i}$
 \end_inset
 
 
@@ -2830,7 +3000,7 @@ while
 
 \begin_layout LyX-Code
     
-\begin_inset Formula $i:=i-1$
+\begin_inset Formula $i\,\leftarrow i-1$
 \end_inset
 
 
@@ -2926,7 +3096,7 @@ while
 
 \begin_layout Standard
 但也许更简易的方法是，先把物品编号做
-\begin_inset Formula $x:=N+1-x$
+\begin_inset Formula $x\,\leftarrow N+1-x$
 \end_inset
 
 的变换，在输出方案时再变换回来。在做完物品编号的变换后，可以按照前面经典的转移方程来求值。只是在输出方案时要注意，如果
@@ -2972,7 +3142,7 @@ while
 \begin_layout Standard
 \begin_inset Formula 
 \[
-F[i,v]=\mathrm{sum}{F[i-1,v],F[i,v-C_{i}]}
+F[i,v]=\mathrm{sum}\{{F[i-1,v],F[i,v-C_{i}]}\}
 \]
 
 \end_inset
@@ -3021,7 +3191,7 @@ F[i,v]=\mathrm{sum}{F[i-1,v],F[i,v-C_{i}]}
 \end_layout
 
 \begin_layout LyX-Code
-\begin_inset Formula $G[0,0]=1$
+\begin_inset Formula $G[0,0]\,\leftarrow1$
 \end_inset
 
 
@@ -3029,7 +3199,7 @@ F[i,v]=\mathrm{sum}{F[i-1,v],F[i,v-C_{i}]}
 
 \begin_layout LyX-Code
 for 
-\begin_inset Formula $i=1$
+\begin_inset Formula $i\,\leftarrow1$
 \end_inset
 
  to 
@@ -3041,7 +3211,7 @@ for
 
 \begin_layout LyX-Code
    for 
-\begin_inset Formula $v=0$
+\begin_inset Formula $v\,\leftarrow0$
 \end_inset
 
  to 
@@ -3053,7 +3223,7 @@ for
 
 \begin_layout LyX-Code
         
-\begin_inset Formula $F[i,v]:=\mathrm{max}\{F[i-1,v],F[i-1,v-C_{i}]+W_{i}\}$
+\begin_inset Formula $F[i,v]\,\leftarrow\mathrm{max}\{F[i-1,v],F[i-1,v-C_{i}]+W_{i}\}$
 \end_inset
 
 
@@ -3061,7 +3231,7 @@ for
 
 \begin_layout LyX-Code
         
-\begin_inset Formula $G[i,v]:=0$
+\begin_inset Formula $G[i,v]\,\leftarrow0$
 \end_inset
 
 
@@ -3090,7 +3260,7 @@ for
 
 \begin_layout LyX-Code
             
-\begin_inset Formula $G[i,v]+=G[i-1][v]$
+\begin_inset Formula $G[i,v]\,\leftarrow G[i,v]+G[i-1][v]$
 \end_inset
 
 
@@ -3106,7 +3276,7 @@ for
 
 \begin_layout LyX-Code
             
-\begin_inset Formula $G[i,v]+=G[i-1][v-C_{i}]$
+\begin_inset Formula $G[i,v]\,\leftarrow G[i,v]+G[i-1][v-C_{i}]$
 \end_inset
 
 
@@ -3296,14 +3466,6 @@ for
 
 \begin_layout Standard
 触类旁通、举一反三，应该也是一个程序员应有的品质吧。
-\end_layout
-
-\begin_layout Standard
-
-\end_layout
-
-\begin_layout Standard
-
 \end_layout
 
 \end_body
