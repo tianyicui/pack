@@ -2,19 +2,16 @@
 \lyxformat 413
 \begin_document
 \begin_header
-\textclass article
+\textclass scrartcl
 \begin_preamble
-\usepackage{indentfirst}
-\setlength{\parindent}{2em}
-
 \usepackage{datetime}
 \renewcommand{\dateseparator}{-}
 
-\setmainfont[BoldFont=STSong,ItalicFont=STKaiti]{STSong}
-\setsansfont[BoldFont=STHeiti]{STHeiti}
-\setmonofont{STFangsong}
-\XeTeXlinebreaklocale "zh"
-\XeTeXlinebreakskip = 0pt plus 1pt
+\usepackage[BoldFont,SlantFont,CJKsetspaces,CJKchecksingle]{xeCJK}
+\setCJKmainfont[BoldFont=STSong,ItalicFont=STKaiti]{STSong}
+\setCJKsansfont[BoldFont=STHeiti]{STHeiti}
+\setCJKmonofont{STFangsong}
+\parindent 2em
 \end_preamble
 \use_default_options true
 \maintain_unincluded_children false
@@ -85,7 +82,7 @@
 \begin_body
 
 \begin_layout Title
-背包问题九讲 2.0 beta1
+背包问题九讲 2.0 beta1.1
 \end_layout
 
 \begin_layout Author
