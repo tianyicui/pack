@@ -82,7 +82,7 @@
 \begin_body
 
 \begin_layout Title
-背包问题九讲 2.0 beta1.1
+背包问题九讲 2.0 beta1.2
 \end_layout
 
 \begin_layout Author
@@ -158,7 +158,7 @@ target "http://love-oriented.com/pack/"
 \end_layout
 
 \begin_layout Standard
-2011年9月，本系列文章由原作者用LaTeX重新制作并全面修订，您现在看到的是2.0 alpha版本，修订历史及最新版本请访问 
+2011年9月，本系列文章由原作者用LaTeX重新制作并全面修订，您现在看到的是2.0 beta版本，修订历史及最新版本请访问 
 \begin_inset CommandInset href
 LatexCommand href
 target "https://github.com/tianyicui/pack"
@@ -576,7 +576,7 @@ def
 \end_inset
 
 
-\begin_inset Formula $F[v]\,\leftarrow\mathrm{max}(F[v],f[v-C]+W)$
+\begin_inset Formula $F[v]\,\leftarrow\mathrm{max}(F[v],F[v-C]+W)$
 \end_inset
 
 
